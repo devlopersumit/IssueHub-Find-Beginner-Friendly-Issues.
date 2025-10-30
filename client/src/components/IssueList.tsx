@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useFetchIssues } from '../hooks/useFetchIssues'
 
 type IssueListProps = {
@@ -7,20 +7,43 @@ type IssueListProps = {
 }
 
 const IssueList: React.FC<IssueListProps> = ({ className = '', query }) => {
-  const { data, isLoading, error } = useFetchIssues(query)
+  const [page, setPage] = useState<number>(1)
+  const perPage = 20
+  const [items, setItems] = useState<any[]>([])
+  const { data, isLoading, error } = useFetchIssues(query, page, perPage)
+
+  useEffect(() => {
+    setPage(1)
+    setItems([])
+  }, [query])
+
+  useEffect(() => {
+    if (data?.items) {
+      setItems((prev) => {
+        const prevIds = new Set(prev.map((i) => i.id))
+        const merged = [...prev]
+        data.items.forEach((it) => {
+          if (!prevIds.has(it.id)) merged.push(it)
+        })
+        return merged
+      })
+    }
+  }, [data])
+
+  const totalCount = data?.total_count ?? 0
+  const canLoadMore = items.length < totalCount && !isLoading && !error
   return (
     <section className={`bg-white ${className}`}>
       <div className="p-4">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold text-gray-900">Beginner-Friendly Issues</h2>
           <div className="text-sm text-gray-500">
-            {isLoading ? 'Loading…' : error ? 'Error' : `${data?.total_count ?? 0} results`}
+            {isLoading && items.length === 0 ? 'Loading…' : error ? 'Error' : `${totalCount} results`}
           </div>
         </div>
         <div className="mt-4 divide-y rounded-md border">
-          {(data?.items ?? [1, 2, 3]).slice(0, 10).map((item: any, idx: number) => {
-          
-            if (!data || !Array.isArray(data.items)) {
+          {(items.length ? items : [1, 2, 3]).map((item: any, idx: number) => {
+            if (!items.length) {
               return (
                 <article key={`placeholder-${idx}`} className="p-4 hover:bg-gray-50">
                   <div className="flex items-start justify-between">
@@ -58,6 +81,20 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query }) => {
               </article>
             )
           })}
+        </div>
+        <div className="mt-4 flex justify-center items-center gap-3">
+          {canLoadMore && (
+            <button
+              type="button"
+              onClick={() => setPage((p) => p + 1)}
+              className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+            >
+              View more issues
+            </button>
+          )}
+          {isLoading && items.length > 0 && (
+            <span className="text-sm text-gray-500">Loading…</span>
+          )}
         </div>
       </div>
     </section>

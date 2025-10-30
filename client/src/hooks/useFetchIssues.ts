@@ -23,7 +23,7 @@ type UseFetchIssuesResult = {
   error: Error | null
 }
 
-export function useFetchIssues(query: string): UseFetchIssuesResult {
+export function useFetchIssues(query: string, page: number = 1, perPage: number = 20): UseFetchIssuesResult {
   const [data, setData] = useState<GithubSearchResponse | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<Error | null>(null)
@@ -41,7 +41,7 @@ export function useFetchIssues(query: string): UseFetchIssuesResult {
       setIsLoading(true)
       setError(null)
       try {
-        const url = `https://api.github.com/search/issues?q=${encodeURIComponent(query)}`
+        const url = `https://api.github.com/search/issues?q=${encodeURIComponent(query)}&page=${page}&per_page=${perPage}`
 
         const response = await fetch(url, {
           method: 'GET',
@@ -74,7 +74,7 @@ export function useFetchIssues(query: string): UseFetchIssuesResult {
     return () => {
       controller.abort()
     }
-  }, [query])
+  }, [query, page, perPage])
 
   return { data, isLoading, error }
 }
