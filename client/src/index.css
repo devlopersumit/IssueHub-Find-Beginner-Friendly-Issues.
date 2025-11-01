@@ -1,3 +1,28 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Ensure dark mode works */
+html.dark {
+  color-scheme: dark;
+}
+
+@layer utilities {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+}

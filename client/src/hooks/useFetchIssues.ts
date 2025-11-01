@@ -60,7 +60,7 @@ export function useFetchIssues(query: string, page: number = 1, perPage: number 
 
         // Log to console for the exercise goal
         // eslint-disable-next-line no-console
-        console.log('[IssueHub] GitHub search response:', json)
+        console.log('[IssueFinder] GitHub search response:', json)
       } catch (err: unknown) {
         if ((err as any)?.name === 'AbortError') return
         setError(err as Error)

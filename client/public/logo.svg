@@ -1,15 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="IssueHub logo">
-  <defs>
-    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
-      <stop offset="0%" stop-color="#6366F1"/>
-      <stop offset="100%" stop-color="#22C55E"/>
-    </linearGradient>
-  </defs>
-  <rect x="2" y="2" width="60" height="60" rx="12" fill="url(#g)"/>
-  <g fill="#ffffff">
-    <circle cx="20" cy="22" r="4"/>
-    <rect x="14" y="30" width="36" height="6" rx="3"/>
-    <rect x="14" y="40" width="24" height="6" rx="3" opacity="0.9"/>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="IssueFinder logo">
+  <rect width="64" height="64" rx="12" fill="#475569"/>
+  <circle cx="28" cy="28" r="10" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"/>
+  <line x1="36" y1="36" x2="44" y2="44" stroke="white" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="42" cy="20" r="6" fill="#FBBF24" stroke="white" stroke-width="2"/>
+  <path d="M39 20 L41 22 L45 18" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
 </svg>
-
