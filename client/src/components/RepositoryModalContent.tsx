@@ -39,7 +39,7 @@ const RepositoryModalContent: React.FC<RepositoryModalContentProps> = ({ repoFul
         <p className="text-red-600 dark:text-red-400">Error loading repository details</p>
         <button
           onClick={onClose}
-          className="mt-4 px-4 py-2 rounded bg-slate-700 dark:bg-slate-600 text-white text-sm hover:bg-slate-800 dark:hover:bg-slate-500"
+          className="mt-4 px-4 py-2 rounded-sm bg-slate-700 dark:bg-slate-600 text-white text-sm hover:bg-slate-800 dark:hover:bg-slate-500"
         >
           Close
         </button>
@@ -55,7 +55,7 @@ const RepositoryModalContent: React.FC<RepositoryModalContentProps> = ({ repoFul
           <img
             src={repository.owner.avatar_url}
             alt={repository.owner.login}
-            className="h-12 w-12 rounded-full border border-gray-300 dark:border-gray-600 flex-shrink-0"
+            className="h-12 w-12 rounded-full border border-gray-300 dark:border-gray-600 shrink-0"
           />
           <div className="flex-1 min-w-0">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-1">
@@ -73,7 +73,7 @@ const RepositoryModalContent: React.FC<RepositoryModalContentProps> = ({ repoFul
         </div>
         <button
           onClick={onClose}
-          className="p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex-shrink-0"
+          className="p-2 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors shrink-0"
           aria-label="Close modal"
         >
           <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -94,19 +94,19 @@ const RepositoryModalContent: React.FC<RepositoryModalContentProps> = ({ repoFul
       <div className="mb-6">
         <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3 uppercase tracking-wide">Statistics</h3>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="bg-gray-50 dark:bg-gray-800 rounded p-3 border border-gray-300 dark:border-gray-700">
+          <div className="bg-gray-50 dark:bg-gray-800 rounded-sm p-3 border border-gray-300 dark:border-gray-700">
             <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">Open Issues</div>
             <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">{repository.open_issues_count}</div>
           </div>
-          <div className="bg-gray-50 dark:bg-gray-800 rounded p-3 border border-gray-300 dark:border-gray-700">
+          <div className="bg-gray-50 dark:bg-gray-800 rounded-sm p-3 border border-gray-300 dark:border-gray-700">
             <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">Stars</div>
             <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">{repository.stargazers_count.toLocaleString()}</div>
           </div>
-          <div className="bg-gray-50 dark:bg-gray-800 rounded p-3 border border-gray-300 dark:border-gray-700">
+          <div className="bg-gray-50 dark:bg-gray-800 rounded-sm p-3 border border-gray-300 dark:border-gray-700">
             <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">Forks</div>
             <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">{repository.forks_count.toLocaleString()}</div>
           </div>
-          <div className="bg-gray-50 dark:bg-gray-800 rounded p-3 border border-gray-300 dark:border-gray-700">
+          <div className="bg-gray-50 dark:bg-gray-800 rounded-sm p-3 border border-gray-300 dark:border-gray-700">
             <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">Watchers</div>
             <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">{repository.watchers_count.toLocaleString()}</div>
           </div>
@@ -149,7 +149,7 @@ const RepositoryModalContent: React.FC<RepositoryModalContentProps> = ({ repoFul
             {repository.topics.map((topic) => (
               <span
                 key={topic}
-                className="inline-flex items-center rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-2.5 py-1 text-xs font-normal text-gray-600 dark:text-gray-300"
+                className="inline-flex items-center rounded-sm border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-2.5 py-1 text-xs font-normal text-gray-600 dark:text-gray-300"
               >
                 {topic}
               </span>
@@ -182,7 +182,7 @@ const RepositoryModalContent: React.FC<RepositoryModalContentProps> = ({ repoFul
                 href={issue.html_url}
                 target="_blank"
                 rel="noreferrer"
-                className="block p-3 border border-gray-300 dark:border-gray-700 rounded hover:border-slate-500 dark:hover:border-slate-500 bg-white dark:bg-gray-800 transition-colors"
+                className="block p-3 border border-gray-300 dark:border-gray-700 rounded-sm hover:border-slate-500 dark:hover:border-slate-500 bg-white dark:bg-gray-800 transition-colors"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
@@ -195,7 +195,7 @@ const RepositoryModalContent: React.FC<RepositoryModalContentProps> = ({ repoFul
                       <span>{issue.comments} {issue.comments === 1 ? 'comment' : 'comments'}</span>
                     </div>
                   </div>
-                  <span className="flex-shrink-0 inline-flex items-center rounded border border-green-300 dark:border-green-700 bg-green-50 dark:bg-green-900/30 px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-300">
+                  <span className="shrink-0 inline-flex items-center rounded-sm border border-green-300 dark:border-green-700 bg-green-50 dark:bg-green-900/30 px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-300">
                     Open
                   </span>
                 </div>

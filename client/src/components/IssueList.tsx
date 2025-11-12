@@ -183,15 +183,15 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
   const shouldShowSkeleton = displayItems.length === 0 && isLoading
 
   return (
-    <section className={`relative w-full max-w-full overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm transition-colors duration-300 dark:border-gray-800 dark:bg-gray-900 ${className}`}>
-      <div className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-48 max-w-4xl rounded-b-[4rem] bg-gradient-to-b from-emerald-200/40 via-slate-100/50 to-transparent dark:from-emerald-500/10 dark:via-gray-800/10" aria-hidden="true" />
+    <section className={`relative w-full max-w-full overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-xs transition-colors duration-300 dark:border-gray-800 dark:bg-gray-900 ${className}`}>
+      <div className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-48 max-w-4xl rounded-b-[4rem] bg-linear-to-b from-emerald-200/40 via-slate-100/50 to-transparent dark:from-emerald-500/10 dark:via-gray-800/10" aria-hidden="true" />
       <div className="relative p-4 sm:p-6 md:p-8">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600 dark:text-emerald-300">Live issue feed</p>
             <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">Spot contributor-friendly tickets fast</h2>
           </div>
-          <div className="inline-flex max-w-sm items-center gap-3 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:text-slate-300">
+          <div className="inline-flex max-w-sm items-center gap-3 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 shadow-xs dark:border-gray-700 dark:bg-gray-800 dark:text-slate-300">
             {isLoading && displayItems.length === 0 ? (
               <>
                 <svg className="h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -234,22 +234,22 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
             ? Array.from({ length: 6 }).map((_, idx) => (
                 <article
                   key={`placeholder-${idx}`}
-                  className="h-full w-full rounded-2xl border border-slate-200 bg-white p-5 shadow-sm animate-pulse dark:border-gray-700 dark:bg-gray-800"
+                  className="h-full w-full rounded-2xl border border-slate-200 bg-white p-5 shadow-xs animate-pulse dark:border-gray-700 dark:bg-gray-800"
                 >
                   <div className="mb-4 flex items-start justify-between gap-3">
-                    <div className="h-4 w-2/3 rounded bg-slate-200 dark:bg-gray-700" />
+                    <div className="h-4 w-2/3 rounded-sm bg-slate-200 dark:bg-gray-700" />
                     <div className="h-5 w-16 rounded-full bg-slate-200 dark:bg-gray-700" />
                   </div>
                   <div className="space-y-2">
-                    <div className="h-3 w-full rounded bg-slate-200 dark:bg-gray-700" />
-                    <div className="h-3 w-3/4 rounded bg-slate-200 dark:bg-gray-700" />
-                    <div className="h-3 w-1/2 rounded bg-slate-200 dark:bg-gray-700" />
+                    <div className="h-3 w-full rounded-sm bg-slate-200 dark:bg-gray-700" />
+                    <div className="h-3 w-3/4 rounded-sm bg-slate-200 dark:bg-gray-700" />
+                    <div className="h-3 w-1/2 rounded-sm bg-slate-200 dark:bg-gray-700" />
                   </div>
                   <div className="mt-5 grid grid-cols-2 gap-3">
-                    <div className="h-4 rounded bg-slate-200 dark:bg-gray-700" />
-                    <div className="h-4 rounded bg-slate-200 dark:bg-gray-700" />
-                    <div className="h-4 rounded bg-slate-200 dark:bg-gray-700" />
-                    <div className="h-4 rounded bg-slate-200 dark:bg-gray-700" />
+                    <div className="h-4 rounded-sm bg-slate-200 dark:bg-gray-700" />
+                    <div className="h-4 rounded-sm bg-slate-200 dark:bg-gray-700" />
+                    <div className="h-4 rounded-sm bg-slate-200 dark:bg-gray-700" />
+                    <div className="h-4 rounded-sm bg-slate-200 dark:bg-gray-700" />
                   </div>
                 </article>
               ))
@@ -265,7 +265,7 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
                     href={issue.html_url}
                     target="_blank"
                     rel="noreferrer"
-                    className="group flex h-full w-full flex-col rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-slate-400 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600"
+                    className="group flex h-full w-full flex-col rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-xs transition hover:-translate-y-0.5 hover:border-slate-400 hover:shadow-md focus:outline-hidden focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600"
                   >
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div className="min-w-0">
@@ -329,7 +329,7 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
                               key={`${issue.id}-label-${i}`}
                               className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600 dark:border-gray-700 dark:bg-gray-800 dark:text-slate-300"
                             >
-                              {icon && <span className="flex-shrink-0 text-slate-400">{icon}</span>}
+                              {icon && <span className="shrink-0 text-slate-400">{icon}</span>}
                               <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
                               {l.name}
                             </span>
@@ -352,7 +352,7 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
             <button
               type="button"
               onClick={() => setPage((p) => Math.max(1, p - 1))}
-              className="inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-white px-4 py-2 text-sm font-semibold text-emerald-600 shadow-sm transition hover:border-emerald-300 hover:text-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-200 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-400 dark:border-emerald-900/40 dark:bg-gray-800 dark:text-emerald-300 dark:hover:border-emerald-700 dark:hover:text-emerald-200"
+              className="inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-white px-4 py-2 text-sm font-semibold text-emerald-600 shadow-xs transition hover:border-emerald-300 hover:text-emerald-700 focus:outline-hidden focus:ring-2 focus:ring-emerald-200 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-400 dark:border-emerald-900/40 dark:bg-gray-800 dark:text-emerald-300 dark:hover:border-emerald-700 dark:hover:text-emerald-200"
               disabled={!hasPrevPage || isLoading}
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -373,7 +373,7 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
             <button
               type="button"
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              className="inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-white px-4 py-2 text-sm font-semibold text-emerald-600 shadow-sm transition hover:border-emerald-300 hover:text-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-200 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-400 dark:border-emerald-900/40 dark:bg-gray-800 dark:text-emerald-300 dark:hover:border-emerald-700 dark:hover:text-emerald-200"
+              className="inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-white px-4 py-2 text-sm font-semibold text-emerald-600 shadow-xs transition hover:border-emerald-300 hover:text-emerald-700 focus:outline-hidden focus:ring-2 focus:ring-emerald-200 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-400 dark:border-emerald-900/40 dark:bg-gray-800 dark:text-emerald-300 dark:hover:border-emerald-700 dark:hover:text-emerald-200"
               disabled={!hasNextPage || isLoading}
             >
               Next

@@ -68,7 +68,7 @@ const HomePage: React.FC = () => {
     <>
       <Hero />
       <main id="catalog" className="mx-auto max-w-7xl px-4 py-8">
-        <section className="mb-10 rounded-3xl border border-slate-200 bg-white px-6 py-8 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <section className="mb-10 rounded-3xl border border-slate-200 bg-white px-6 py-8 shadow-xs dark:border-gray-800 dark:bg-gray-900">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div className="space-y-2 max-w-2xl">
               <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Repository explorer</p>
@@ -79,7 +79,7 @@ const HomePage: React.FC = () => {
             </div>
             <Link
               to="/repositories"
-              className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-5 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-gray-700 dark:bg-gray-800 dark:text-slate-200 dark:hover:border-gray-600 dark:hover:text-white"
+              className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-5 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-slate-200 dark:border-gray-700 dark:bg-gray-800 dark:text-slate-200 dark:hover:border-gray-600 dark:hover:text-white"
             >
               Browse repositories
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -93,7 +93,7 @@ const HomePage: React.FC = () => {
         <div className="mb-8 flex justify-center">
           <Link
             to="/bounty"
-            className="inline-flex items-center gap-2 px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 rounded-lg shadow-md hover:shadow-lg transition-all duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 text-base font-semibold text-white bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 rounded-lg shadow-md hover:shadow-lg transition-all duration-200"
           >
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
               <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
@@ -138,7 +138,7 @@ const HomePage: React.FC = () => {
           <div className="md:hidden">
             <button
               type="button"
-              className="inline-flex items-center gap-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+              className="inline-flex items-center gap-2 rounded-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
               onClick={() => setShowMobileFilters((v) => !v)}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

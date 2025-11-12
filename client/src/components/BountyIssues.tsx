@@ -877,7 +877,7 @@ const BountyIssues: React.FC<BountyIssuesProps> = ({ className = '' }) => {
   }
 
   return (
-    <section className={`relative bg-gradient-to-br from-amber-50/50 via-white to-orange-50/30 dark:from-amber-950/10 dark:via-gray-900 dark:to-orange-950/10 border-l-4 border-amber-500 dark:border-amber-600 border-t border-r border-b border-gray-200 dark:border-gray-800 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 ${className}`}>
+    <section className={`relative bg-linear-to-br from-amber-50/50 via-white to-orange-50/30 dark:from-amber-950/10 dark:via-gray-900 dark:to-orange-950/10 border-l-4 border-amber-500 dark:border-amber-600 border-t border-r border-b border-gray-200 dark:border-gray-800 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 ${className}`}>
       <div className="absolute top-0 right-0 -mt-3 -mr-3">
         <div className="bg-amber-500 dark:bg-amber-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
           Featured
@@ -886,7 +886,7 @@ const BountyIssues: React.FC<BountyIssuesProps> = ({ className = '' }) => {
       <div className="p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <div className="flex items-start gap-3">
-            <div className="flex-shrink-0 mt-1">
+            <div className="shrink-0 mt-1">
               <svg className="w-6 h-6 text-amber-600 dark:text-amber-500" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clipRule="evenodd" />
@@ -1067,7 +1067,7 @@ const BountyIssues: React.FC<BountyIssuesProps> = ({ className = '' }) => {
                             {repoLanguages[issue.repository_url].slice(0, 3).map((lang, idx) => (
                               <span
                                 key={`${issue.id}-lang-${idx}`}
-                                className={`inline-flex items-center gap-1 rounded-md border px-2.5 py-1 text-xs font-medium shadow-sm ${getLanguageColor(lang)}`}
+                                className={`inline-flex items-center gap-1 rounded-md border px-2.5 py-1 text-xs font-medium shadow-xs ${getLanguageColor(lang)}`}
                               >
                                 <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                   <path fillRule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -1094,11 +1094,11 @@ const BountyIssues: React.FC<BountyIssuesProps> = ({ className = '' }) => {
                                 key={`${issue.id}-label-${i}`} 
                                 className={`inline-flex items-center gap-1 rounded px-2 py-0.5 text-xs font-medium ${
                                   isBountyLabel
-                                    ? 'bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700 shadow-sm'
+                                    ? 'bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700 shadow-xs'
                                     : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
                                 }`}
                               >
-                                {icon && <span className="flex-shrink-0">{icon}</span>}
+                                {icon && <span className="shrink-0">{icon}</span>}
                                 {l.name}
                               </span>
                             )
@@ -1106,9 +1106,9 @@ const BountyIssues: React.FC<BountyIssuesProps> = ({ className = '' }) => {
                         </div>
                       )}
                     </div>
-                    <div className="flex flex-col items-end gap-2 flex-shrink-0">
+                    <div className="flex flex-col items-end gap-2 shrink-0">
                       {isBounty && (
-                        <span className="inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-semibold bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-sm border border-amber-600">
+                        <span className="inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-semibold bg-linear-to-r from-amber-500 to-orange-500 text-white shadow-xs border border-amber-600">
                           <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clipRule="evenodd" />

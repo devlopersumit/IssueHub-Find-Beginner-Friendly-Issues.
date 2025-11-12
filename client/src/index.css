@@ -1,6 +1,44 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@utility custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+}
 
 @layer base {
   body {
@@ -23,42 +61,31 @@
   }
 }
 
-/* Ensure dark mode works */
-html.dark {
-  color-scheme: dark;
-}
-
-/* Smooth transitions for theme changes - apply to elements that change colors */
-html {
-  transition: background-color 300ms ease, color 300ms ease;
-}
-
-body {
-  transition: background-color 300ms ease, color 300ms ease;
-}
-
-/* Smooth transitions for all elements with dark mode classes */
-[class*="dark:"] {
-  transition: background-color 300ms ease, border-color 300ms ease, color 300ms ease;
-}
-
 @layer utilities {
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
+  /* Ensure dark mode works */
+  html.dark {
+    color-scheme: dark;
   }
-  
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
+
+  /* Smooth transitions for theme changes - apply to elements that change colors */
+  html {
+    transition:
+      background-color 300ms ease,
+      color 300ms ease;
   }
-  
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 10px;
+
+  body {
+    transition:
+      background-color 300ms ease,
+      color 300ms ease;
   }
-  
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
+
+  /* Smooth transitions for all elements with dark mode classes */
+  [class*='dark:'] {
+    transition:
+      background-color 300ms ease,
+      border-color 300ms ease,
+      color 300ms ease;
   }
 }
 

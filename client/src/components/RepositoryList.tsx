@@ -48,8 +48,8 @@ const RepositoryList: React.FC<RepositoryListProps> = ({ className = '', languag
   const shouldShowSkeleton = displayItems.length === 0 && displayLoading
 
   return (
-    <section className={`relative w-full max-w-full overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm transition-colors duration-300 dark:border-gray-800 dark:bg-gray-900 ${className}`}>
-      <div className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-48 max-w-4xl rounded-b-[4rem] bg-gradient-to-b from-blue-200/40 via-slate-100/50 to-transparent dark:from-blue-500/10 dark:via-gray-800/10" aria-hidden="true" />
+    <section className={`relative w-full max-w-full overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-xs transition-colors duration-300 dark:border-gray-800 dark:bg-gray-900 ${className}`}>
+      <div className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-48 max-w-4xl rounded-b-[4rem] bg-linear-to-b from-blue-200/40 via-slate-100/50 to-transparent dark:from-blue-500/10 dark:via-gray-800/10" aria-hidden="true" />
       <div className="relative p-4 sm:p-6 md:p-8">
         {/* Search Input */}
         <div className="mb-6">
@@ -59,7 +59,7 @@ const RepositoryList: React.FC<RepositoryListProps> = ({ className = '', languag
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search repository (e.g., facebook/react or just react)..."
-              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 pl-11 text-sm text-slate-800 shadow-sm transition focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:focus:ring-gray-700"
+              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 pl-11 text-sm text-slate-800 shadow-xs transition focus:border-slate-400 focus:outline-hidden focus:ring-2 focus:ring-slate-200 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:focus:ring-gray-700"
             />
             <svg
               className="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400 dark:text-slate-500"
@@ -100,14 +100,14 @@ const RepositoryList: React.FC<RepositoryListProps> = ({ className = '', languag
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value as 'stars' | 'updated' | 'forks')}
-                className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-gray-700 dark:bg-gray-800 dark:text-slate-200 dark:focus:ring-gray-700"
+                className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-xs focus:border-slate-400 focus:outline-hidden focus:ring-2 focus:ring-slate-200 dark:border-gray-700 dark:bg-gray-800 dark:text-slate-200 dark:focus:ring-gray-700"
               >
                 <option value="stars">Most stars</option>
                 <option value="updated">Recently updated</option>
                 <option value="forks">Most forks</option>
               </select>
             )}
-            <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:text-slate-300">
+            <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 shadow-xs dark:border-gray-700 dark:bg-gray-800 dark:text-slate-300">
               {displayLoading && displayItems.length === 0 ? (
                 <>
                   <svg className="h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -153,28 +153,28 @@ const RepositoryList: React.FC<RepositoryListProps> = ({ className = '', languag
             ? Array.from({ length: 6 }).map((_, idx) => (
                 <article
                   key={`placeholder-${idx}`}
-                  className="h-full w-full rounded-2xl border border-slate-200 bg-white p-5 shadow-sm animate-pulse dark:border-gray-700 dark:bg-gray-800"
+                  className="h-full w-full rounded-2xl border border-slate-200 bg-white p-5 shadow-xs animate-pulse dark:border-gray-700 dark:bg-gray-800"
                 >
                   <div className="flex items-start gap-4">
                     <div className="h-12 w-12 rounded-full bg-slate-200 dark:bg-gray-700" />
                     <div className="flex-1 space-y-3">
-                      <div className="h-4 w-3/4 rounded bg-slate-200 dark:bg-gray-700" />
-                      <div className="h-3 w-2/3 rounded bg-slate-200 dark:bg-gray-700" />
-                      <div className="h-3 w-1/2 rounded bg-slate-200 dark:bg-gray-700" />
+                      <div className="h-4 w-3/4 rounded-sm bg-slate-200 dark:bg-gray-700" />
+                      <div className="h-3 w-2/3 rounded-sm bg-slate-200 dark:bg-gray-700" />
+                      <div className="h-3 w-1/2 rounded-sm bg-slate-200 dark:bg-gray-700" />
                     </div>
                   </div>
                   <div className="mt-6 grid grid-cols-2 gap-3">
-                    <div className="h-4 rounded bg-slate-200 dark:bg-gray-700" />
-                    <div className="h-4 rounded bg-slate-200 dark:bg-gray-700" />
-                    <div className="h-4 rounded bg-slate-200 dark:bg-gray-700" />
-                    <div className="h-4 rounded bg-slate-200 dark:bg-gray-700" />
+                    <div className="h-4 rounded-sm bg-slate-200 dark:bg-gray-700" />
+                    <div className="h-4 rounded-sm bg-slate-200 dark:bg-gray-700" />
+                    <div className="h-4 rounded-sm bg-slate-200 dark:bg-gray-700" />
+                    <div className="h-4 rounded-sm bg-slate-200 dark:bg-gray-700" />
                   </div>
                 </article>
               ))
             : displayItems.map((repo: any) => (
                 <article
                   key={repo.id}
-                  className="group flex h-full w-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-slate-400 hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:hover:border-slate-500"
+                  className="group flex h-full w-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-xs transition hover:-translate-y-0.5 hover:border-slate-400 hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:hover:border-slate-500"
                   onClick={() => setSelectedRepo(repo.full_name)}
                 >
                   <div className="flex flex-1 flex-col gap-4">
@@ -182,7 +182,7 @@ const RepositoryList: React.FC<RepositoryListProps> = ({ className = '', languag
                       <img
                         src={repo.owner.avatar_url}
                         alt={repo.owner.login}
-                        className="h-12 w-12 flex-shrink-0 rounded-full border border-slate-200 bg-white object-cover dark:border-gray-700"
+                        className="h-12 w-12 shrink-0 rounded-full border border-slate-200 bg-white object-cover dark:border-gray-700"
                       />
                       <div className="min-w-0 flex-1">
                         <div className="flex items-start gap-2">
@@ -299,7 +299,7 @@ const RepositoryList: React.FC<RepositoryListProps> = ({ className = '', languag
               <button
                 type="button"
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
-                className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-400 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-200 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-400 dark:border-gray-700 dark:bg-gray-800 dark:text-slate-200 dark:hover:border-gray-600 dark:hover:text-white"
+                className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-xs transition hover:border-slate-400 hover:text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-slate-200 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-400 dark:border-gray-700 dark:bg-gray-800 dark:text-slate-200 dark:hover:border-gray-600 dark:hover:text-white"
                 disabled={!hasPrevPage || isLoading}
               >
                 <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -308,7 +308,7 @@ const RepositoryList: React.FC<RepositoryListProps> = ({ className = '', languag
                 Previous
               </button>
 
-              <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-600 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:text-slate-300">
+              <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-600 shadow-xs dark:border-gray-700 dark:bg-gray-800 dark:text-slate-300">
                 <svg className="h-4 w-4 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12M8 12h12m-7 5h7M3 7h.01M3 12h.01M3 17h.01" />
                 </svg>
@@ -320,7 +320,7 @@ const RepositoryList: React.FC<RepositoryListProps> = ({ className = '', languag
               <button
                 type="button"
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-400 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-200 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-400 dark:border-gray-700 dark:bg-gray-800 dark:text-slate-200 dark:hover:border-gray-600 dark:hover:text-white"
+                className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-xs transition hover:border-slate-400 hover:text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-slate-200 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-400 dark:border-gray-700 dark:bg-gray-800 dark:text-slate-200 dark:hover:border-gray-600 dark:hover:text-white"
                 disabled={!hasNextPage || isLoading}
               >
                 Next

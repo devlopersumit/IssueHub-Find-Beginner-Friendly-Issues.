@@ -37,7 +37,7 @@ const RepositoryModal: React.FC<RepositoryModalProps> = ({ repoFullName, onClose
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm transition-opacity"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs transition-opacity"
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           onClose()

@@ -194,7 +194,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
     (selectedLabels && selectedLabels.length > 0)
 
   return (
-    <aside className={`rounded-2xl border border-slate-200 bg-white/95 shadow-sm transition-colors duration-200 dark:border-gray-700 dark:bg-gray-900 ${className}`}>
+    <aside className={`rounded-2xl border border-slate-200 bg-white/95 shadow-xs transition-colors duration-200 dark:border-gray-700 dark:bg-gray-900 ${className}`}>
       <div className="p-5 sm:p-6">
         <h2 className="mb-4 flex items-center gap-2 text-base font-semibold text-gray-900 dark:text-gray-100">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -239,7 +239,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
                         onClick={() => onToggleLabel(tag.key)}
                         className={`w-full rounded-lg border px-3 py-2 text-left transition ${
                           active
-                            ? 'border-slate-600 bg-slate-900 text-white shadow-sm dark:border-slate-500 dark:bg-slate-700'
+                            ? 'border-slate-600 bg-slate-900 text-white shadow-xs dark:border-slate-500 dark:bg-slate-700'
                             : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-100 dark:border-gray-700 dark:bg-gray-900 dark:text-slate-300 dark:hover:border-gray-600 dark:hover:bg-gray-800'
                         }`}
                       >
@@ -285,7 +285,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
                       onClick={() => onChangeDifficulty(opt.key ?? null)}
                       className={`rounded-md border px-3 py-2 text-sm font-medium transition ${
                         (selectedDifficulty ?? '') === (opt.key ?? '')
-                          ? `${getDifficultyColor(opt.key)} shadow-sm`
+                          ? `${getDifficultyColor(opt.key)} shadow-xs`
                           : 'border-gray-200 bg-gray-50 text-gray-700 hover:border-slate-300 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-slate-500'
                       }`}
                     >
@@ -389,7 +389,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
           )}
 
           {/* Language Filter */}
-          <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+          <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-xs dark:border-gray-700 dark:bg-gray-900">
             <button
               type="button"
               onClick={() => toggleSection('language')}
@@ -432,7 +432,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
 
           {/* License Filter */}
           {onChangeLicense && (
-            <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+            <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-xs dark:border-gray-700 dark:bg-gray-900">
               <button
                 type="button"
                 onClick={() => toggleSection('license')}
@@ -462,7 +462,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
                       onClick={() => onChangeLicense(opt.key ?? null)}
                       className={`flex items-center justify-between rounded-md border px-3 py-1.5 text-xs font-medium transition ${
                         (selectedLicense ?? '') === (opt.key ?? '')
-                          ? 'border-slate-600 bg-slate-900 text-white shadow-sm dark:border-slate-500 dark:bg-slate-700'
+                          ? 'border-slate-600 bg-slate-900 text-white shadow-xs dark:border-slate-500 dark:bg-slate-700'
                           : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-100 dark:border-gray-700 dark:bg-gray-900 dark:text-slate-300 dark:hover:border-gray-600 dark:hover:bg-gray-800'
                       }`}
                     >
@@ -572,7 +572,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
             <button
               type="button"
               onClick={handleClearFilters}
-              className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-gray-700 dark:bg-gray-800 dark:text-slate-200 dark:hover:border-gray-600 dark:hover:text-white"
+              className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-slate-200 dark:border-gray-700 dark:bg-gray-800 dark:text-slate-200 dark:hover:border-gray-600 dark:hover:text-white"
             >
               Clear all filters
             </button>
