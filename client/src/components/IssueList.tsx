@@ -23,23 +23,18 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
   useEffect(() => {
     setPage(1)
     setItems([])
+    languagesFetchedRef.current = new Set()
+    setRepoLanguages({})
   }, [query])
 
   useEffect(() => {
     if (data?.items) {
-      setItems((prev) => {
-        const prevIds = new Set(prev.map((i) => i.id))
-        const merged = [...prev]
-        data.items.forEach((it) => {
-          if (!prevIds.has(it.id)) merged.push(it)
-        })
-        return merged
-      })
-      
+      setItems(data.items)
+
       const newRepos = data.items
         .filter(item => item.repository_url && !languagesFetchedRef.current.has(item.repository_url))
         .map(item => item.repository_url)
-      
+
       if (newRepos.length > 0) {
         const uniqueRepos = Array.from(new Set(newRepos))
         uniqueRepos.forEach(async (repoUrl) => {
@@ -52,6 +47,8 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
           }
         })
       }
+    } else {
+      setItems([])
     }
   }, [data])
 
@@ -63,7 +60,9 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
   }, [items, naturalLanguageFilter])
 
   const totalCount = data?.total_count ?? 0
-  const canLoadMore = items.length < totalCount && !isLoading && !error
+  const totalPages = Math.max(1, Math.ceil(totalCount / perPage))
+  const hasPrevPage = page > 1
+  const hasNextPage = page < totalPages
   const displayItems = filteredItems
   
   const formatDate = (dateString: string) => {
@@ -231,186 +230,210 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
     )
   }
 
+  const shouldShowSkeleton = displayItems.length === 0 && isLoading
+
   return (
-    <section className={`bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded transition-colors duration-200 ${className}`}>
-      <div className="p-4">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Issues</h2>
-          <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+    <section className={`relative overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm transition-colors duration-300 dark:border-gray-800 dark:bg-gray-900 ${className}`}>
+      <div className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-48 max-w-4xl rounded-b-[4rem] bg-gradient-to-b from-emerald-200/40 via-slate-100/50 to-transparent dark:from-emerald-500/10 dark:via-gray-800/10" aria-hidden="true" />
+      <div className="relative p-6 sm:p-8">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600 dark:text-emerald-300">Live issue feed</p>
+            <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">Spot contributor-friendly tickets fast</h2>
+          </div>
+          <div className="inline-flex max-w-sm items-center gap-3 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:text-slate-300">
             {isLoading && displayItems.length === 0 ? (
-              <span className="flex items-center gap-2">
-                <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <>
+                <svg className="h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                Loading…
-              </span>
+                Refreshing opportunities…
+              </>
             ) : error ? (
-              <div className="flex flex-col gap-1">
-                <span className="text-red-600 dark:text-red-400">Error loading issues</span>
-                <span className="text-xs text-gray-500 dark:text-gray-400 max-w-md">
-                  {error.message.includes('rate limit') 
-                    ? 'GitHub API rate limit reached. Please wait a few minutes and try again.'
-                    : error.message.includes('forbidden')
-                    ? 'GitHub API access issue. Try simplifying your filters or wait a moment.'
-                    : error.message}
-                </span>
-              </div>
+              <span className="text-red-600 dark:text-red-400">
+                {error.message.includes('rate limit')
+                  ? 'GitHub API rate limit reached. Try again shortly.'
+                  : error.message.includes('forbidden')
+                  ? 'GitHub API access blocked. Adjust filters or retry.'
+                  : 'Error loading issues'}
+              </span>
             ) : (
-              <span className="font-medium">{totalCount.toLocaleString()} {totalCount === 1 ? 'result' : 'results'}</span>
+              <>
+                <svg className="h-4 w-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10A8 8 0 112 10a8 8 0 0116 0zm-9-3a1 1 0 112 0v4a1 1 0 01-.293.707l-2 2a1 1 0 11-1.414-1.414L9 10.586V7z" clipRule="evenodd" />
+                </svg>
+                {totalCount.toLocaleString()} curated {totalCount === 1 ? 'issue' : 'issues'}
+              </>
             )}
           </div>
         </div>
-        
+
         {displayItems.length === 0 && !isLoading && !error && (
-          <div className="text-center py-8">
-            <svg className="mx-auto h-10 w-10 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="mt-10 rounded-2xl border border-dashed border-slate-300 bg-slate-50/60 px-6 py-12 text-center dark:border-gray-700 dark:bg-gray-800/40">
+            <svg className="mx-auto h-12 w-12 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
-            <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">No issues found</h3>
-            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">Try adjusting your filters or search terms.</p>
+            <h3 className="mt-3 text-sm font-semibold text-slate-900 dark:text-slate-100">No issues match your filters yet</h3>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Try loosening a filter or explore a different language category.</p>
           </div>
         )}
 
-        <div className="space-y-2">
-          {(displayItems.length ? displayItems : [1, 2, 3]).map((item: any, idx: number) => {
-            if (!displayItems.length) {
-              return (
-                <article key={`placeholder-${idx}`} className="p-4 border border-gray-300 dark:border-gray-700 rounded animate-pulse">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1">
-                      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
-                      <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mb-2"></div>
-                      <div className="flex flex-wrap gap-2">
-                        <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded w-20"></div>
-                        <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded w-16"></div>
-                      </div>
-                    </div>
-                    <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded w-12"></div>
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {shouldShowSkeleton
+            ? Array.from({ length: 6 }).map((_, idx) => (
+                <article
+                  key={`placeholder-${idx}`}
+                  className="h-full rounded-2xl border border-slate-200 bg-white p-5 shadow-sm animate-pulse dark:border-gray-700 dark:bg-gray-800"
+                >
+                  <div className="mb-4 flex items-start justify-between gap-3">
+                    <div className="h-4 w-2/3 rounded bg-slate-200 dark:bg-gray-700" />
+                    <div className="h-5 w-16 rounded-full bg-slate-200 dark:bg-gray-700" />
+                  </div>
+                  <div className="space-y-2">
+                    <div className="h-3 w-full rounded bg-slate-200 dark:bg-gray-700" />
+                    <div className="h-3 w-3/4 rounded bg-slate-200 dark:bg-gray-700" />
+                    <div className="h-3 w-1/2 rounded bg-slate-200 dark:bg-gray-700" />
+                  </div>
+                  <div className="mt-5 grid grid-cols-2 gap-3">
+                    <div className="h-4 rounded bg-slate-200 dark:bg-gray-700" />
+                    <div className="h-4 rounded bg-slate-200 dark:bg-gray-700" />
+                    <div className="h-4 rounded bg-slate-200 dark:bg-gray-700" />
+                    <div className="h-4 rounded bg-slate-200 dark:bg-gray-700" />
                   </div>
                 </article>
-              )
-            }
-            const issue = item
-            const repo = issue.repository_url?.split('/').slice(-2).join('/')
-            const difficulty = detectDifficulty(issue.labels || [])
-            const mainIcon = getIssueIcon(issue.labels || [])
-            return (
-              <article key={issue.id} className="p-4 border border-gray-300 dark:border-gray-700 rounded hover:border-slate-500 dark:hover:border-slate-500 bg-white dark:bg-gray-800 transition-colors duration-200">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start gap-2 mb-1.5">
-                      <span className="text-gray-500 dark:text-gray-400 flex-shrink-0">
-                        {mainIcon}
-                      </span>
-                      <a 
-                        href={issue.html_url} 
-                        target="_blank" 
-                        rel="noreferrer" 
-                        className="text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:underline line-clamp-2 block flex-1"
-                      >
-                        {issue.title}
-                      </a>
+              ))
+            : displayItems.map((issue: any) => {
+                const repo = issue.repository_url?.split('/').slice(-2).join('/')
+                const difficulty = detectDifficulty(issue.labels || [])
+                const mainIcon = getIssueIcon(issue.labels || [])
+                const repoLangs = repoLanguages[issue.repository_url] || []
+                const primaryLanguage = repoLangs.length > 0 ? repoLangs[0] : null
+
+                return (
+                  <a
+                    key={issue.id}
+                    href={issue.html_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="group flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-slate-400 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">{repo}</p>
+                        <p className="text-xs text-slate-400 dark:text-slate-500">Issue #{issue.number}</p>
+                      </div>
                       <DifficultyBadge difficulty={difficulty} />
                     </div>
-                    <div className="mt-1.5 flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400 flex-wrap">
-                      <span className="font-mono">{repo}</span>
-                      <span>•</span>
-                      <span>#{issue.number}</span>
-                      <span>•</span>
-                      <span>{formatDate(issue.created_at)}</span>
+
+                    <h3 className="mt-3 text-base font-semibold text-slate-900 transition group-hover:text-slate-600 dark:text-slate-100 dark:group-hover:text-slate-200">
+                      {issue.title}
+                    </h3>
+
+                    <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-300">
+                      <span className="inline-flex items-center gap-1">
+                        <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Opened {formatDate(issue.created_at)}
+                      </span>
+                      <span className="inline-flex items-center gap-1">
+                        <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M18 13V5a3 3 0 00-3-3H5a3 3 0 00-3 3v8a3 3 0 003 3h1v2.382a.5.5 0 00.79.407L10.5 16H15a3 3 0 003-3z" />
+                        </svg>
+                        {issue.comments} comments
+                      </span>
+                      <span className="inline-flex items-center gap-1">
+                        <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7h18M3 12h18M3 17h18" />
+                        </svg>
+                        {issue.state === 'open' ? 'No assignee' : 'Closed'}
+                      </span>
+                      {primaryLanguage && (
+                        <span className="inline-flex items-center gap-1">
+                          <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                            <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
+                          </svg>
+                          {primaryLanguage}
+                        </span>
+                      )}
                     </div>
-                    {repoLanguages[issue.repository_url] && repoLanguages[issue.repository_url].length > 0 && (
-                      <div className="mt-2 flex items-center gap-2 flex-wrap">
-                        <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">Languages:</span>
-                        <div className="flex flex-wrap gap-1.5">
-                          {repoLanguages[issue.repository_url].slice(0, 3).map((lang, idx) => (
-                            <span
-                              key={`${issue.id}-lang-${idx}`}
-                              className={`inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-xs font-medium shadow-sm ${getLanguageColor(lang)}`}
-                            >
-                              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                              </svg>
-                              {lang}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
+
                     {issue.labels && issue.labels.length > 0 && (
-                      <div className="mt-2 flex flex-wrap gap-1.5">
-                        {issue.labels.slice(0, 4).map((l: any, i: number) => {
+                      <div className="mt-4 flex flex-wrap gap-1.5">
+                        {issue.labels.slice(0, 3).map((l: any, i: number) => {
                           const labelLower = l.name.toLowerCase()
                           const icon = getLabelIcon(l.name || '')
-                          const colors: Record<string, string> = {
-                            'good first issue': 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-green-300 dark:border-green-700',
-                            'help wanted': 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-700',
-                            'enhancement': 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border-purple-300 dark:border-purple-700',
-                            'bug': 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 border-red-300 dark:border-red-700',
-                            'feature': 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 border-indigo-300 dark:border-indigo-700',
-                            'documentation': 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 border-yellow-300 dark:border-yellow-700',
-                            'refactor': 'bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-300 border-cyan-300 dark:border-cyan-700',
-                            'performance': 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 border-orange-300 dark:border-orange-700',
-                            'testing': 'bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 border-pink-300 dark:border-pink-700',
-                            'question': 'bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 border-teal-300 dark:border-teal-700',
+                          const dotColors: Record<string, string> = {
+                            'good first issue': 'bg-emerald-400',
+                            'help wanted': 'bg-sky-400',
+                            'enhancement': 'bg-violet-400',
+                            'bug': 'bg-rose-400',
+                            'feature': 'bg-indigo-400',
+                            'documentation': 'bg-amber-400'
                           }
-                          // Check for exact match or contains match
-                          let colorClass = 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600'
-                          for (const [key, value] of Object.entries(colors)) {
-                            if (labelLower === key || labelLower.includes(key)) {
-                              colorClass = value
-                              break
-                            }
-                          }
+                          const dot = dotColors[labelLower] || 'bg-slate-400'
+
                           return (
-                            <span 
-                              key={`${issue.id}-label-${i}`} 
-                              className={`inline-flex items-center gap-1 rounded border px-2 py-0.5 text-xs font-normal ${colorClass}`}
+                            <span
+                              key={`${issue.id}-label-${i}`}
+                              className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600 dark:border-gray-700 dark:bg-gray-800 dark:text-slate-300"
                             >
-                              {icon && <span className="flex-shrink-0">{icon}</span>}
+                              {icon && <span className="flex-shrink-0 text-slate-400">{icon}</span>}
+                              <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
                               {l.name}
                             </span>
                           )
                         })}
-                        {issue.labels.length > 4 && (
-                          <span className="inline-flex items-center rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-2 py-0.5 text-xs font-normal text-gray-600 dark:text-gray-300">
-                            +{issue.labels.length - 4}
+                        {issue.labels.length > 3 && (
+                          <span className="inline-flex items-center rounded-full border border-slate-200 bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-500 dark:border-gray-700 dark:bg-gray-700/60 dark:text-slate-300">
+                            +{issue.labels.length - 3}
                           </span>
                         )}
                       </div>
                     )}
-                  </div>
-                  <span className="flex-shrink-0 inline-flex items-center rounded border border-green-300 dark:border-green-700 bg-green-50 dark:bg-green-900/30 px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-300">
-                    Open
-                  </span>
-                </div>
-              </article>
-            )
-          })}
+                  </a>
+                )
+              })}
         </div>
-        
-        <div className="mt-4 flex justify-center items-center gap-3">
-          {canLoadMore && (
+
+        {totalCount > 0 && (
+          <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <button
               type="button"
-              onClick={() => setPage((p) => p + 1)}
-              className="rounded bg-slate-700 dark:bg-slate-600 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 dark:hover:bg-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500 disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={isLoading}
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              className="inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-white px-4 py-2 text-sm font-semibold text-emerald-600 shadow-sm transition hover:border-emerald-300 hover:text-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-200 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-400 dark:border-emerald-900/40 dark:bg-gray-800 dark:text-emerald-300 dark:hover:border-emerald-700 dark:hover:text-emerald-200"
+              disabled={!hasPrevPage || isLoading}
             >
-              {isLoading ? 'Loading...' : 'Load More'}
-            </button>
-          )}
-          {isLoading && displayItems.length > 0 && (
-            <span className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-              <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
-              Loading more issues...
-            </span>
-          )}
-        </div>
+              Previous
+            </button>
+
+            <div className="flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-xs font-semibold text-emerald-700 dark:border-emerald-900/40 dark:bg-emerald-900/10 dark:text-emerald-300">
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h3.382a1 1 0 01.894.553l1.447 2.894A1 1 0 0010.618 7H19a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V4z" />
+              </svg>
+              Page {page} of {totalPages}
+              <span className="hidden text-slate-500 dark:text-slate-300 sm:inline">•</span>
+              <span className="hidden text-slate-600 dark:text-slate-300 sm:inline">{totalCount.toLocaleString()} total issues</span>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              className="inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-white px-4 py-2 text-sm font-semibold text-emerald-600 shadow-sm transition hover:border-emerald-300 hover:text-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-200 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-400 dark:border-emerald-900/40 dark:bg-gray-800 dark:text-emerald-300 dark:hover:border-emerald-700 dark:hover:text-emerald-200"
+              disabled={!hasNextPage || isLoading}
+            >
+              Next
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        )}
       </div>
     </section>
   )
