@@ -16,6 +16,11 @@ type GithubRepository = {
   open_issues_count: number
   updated_at: string
   topics: string[]
+  license: {
+    key: string | null
+    name: string | null
+    spdx_id: string | null
+  } | null
 }
 
 type GithubRepositoriesResponse = {
@@ -32,6 +37,7 @@ type UseFetchRepositoriesResult = {
 
 export function useFetchRepositories(
   language: string | null,
+  license: string | null,
   sort: 'stars' | 'updated' | 'forks' = 'stars',
   page: number = 1,
   perPage: number = 20
@@ -57,7 +63,11 @@ export function useFetchRepositories(
         if (language) {
           queryParts.push(`language:${language}`)
         }
-        
+
+        if (license) {
+          queryParts.push(`license:${license}`)
+        }
+
         queryParts.push('forks:>=10')
         queryParts.push('stars:>=50')
         queryParts.push('archived:false')
@@ -92,7 +102,7 @@ export function useFetchRepositories(
     return () => {
       controller.abort()
     }
-  }, [language, sort, page, perPage])
+  }, [language, license, sort, page, perPage])
 
   return { data, isLoading, error }
 }
