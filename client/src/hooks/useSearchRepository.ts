@@ -16,6 +16,11 @@ type Repository = {
   open_issues_count: number
   updated_at: string
   topics: string[]
+  license: {
+    key: string | null
+    name: string | null
+    spdx_id: string | null
+  } | null
 }
 
 type SearchRepositoriesResponse = {
