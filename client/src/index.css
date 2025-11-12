@@ -2,6 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  body {
+    @apply font-sans antialiased bg-slate-50 text-slate-800 dark:bg-gray-950 dark:text-slate-200;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-semibold text-slate-900 dark:text-slate-100 tracking-tight;
+  }
+
+  p,
+  span,
+  li {
+    @apply text-slate-600 dark:text-slate-300;
+  }
+}
+
 /* Ensure dark mode works */
 html.dark {
   color-scheme: dark;
