@@ -20,6 +20,8 @@ type FiltersPanelProps = {
   onChangeFramework?: (framework: string | null) => void
   selectedLastActivity?: string | null
   onChangeLastActivity?: (activity: string | null) => void
+  selectedLicense?: string | null
+  onChangeLicense?: (license: string | null) => void
 }
 
 // Simplified categories 
@@ -84,10 +86,32 @@ const LAST_ACTIVITY_OPTIONS = [
   { key: 'active', label: 'Active Maintainers' },
 ]
 
+const CURATED_LABELS = [
+  { key: 'good first issue', label: 'Good First Issue', description: 'Perfect for first-time contributors' },
+  { key: 'help wanted', label: 'Help Wanted', description: 'Maintainers actively looking for help' },
+  { key: 'documentation', label: 'Documentation', description: 'Improve docs, guides, and examples' },
+  { key: 'bug', label: 'Bug', description: 'Track down and fix critical bugs' },
+  { key: 'feature', label: 'Feature', description: 'Build new functionality and enhancements' },
+  { key: 'hacktoberfest', label: 'Hacktoberfest', description: 'Eligible for seasonal Hacktoberfest events' },
+  { key: 'performance', label: 'Performance', description: 'Optimize code paths and benchmarks' },
+  { key: 'security', label: 'Security', description: 'Hardening, audits, and vulnerability fixes' },
+]
+
+const POPULAR_LICENSES = [
+  { key: null, label: 'Any License' },
+  { key: 'mit', label: 'MIT' },
+  { key: 'apache-2.0', label: 'Apache 2.0' },
+  { key: 'gpl-3.0', label: 'GPL 3.0' },
+  { key: 'bsd-3-clause', label: 'BSD 3-Clause' },
+  { key: 'mpl-2.0', label: 'Mozilla 2.0' },
+  { key: 'agpl-3.0', label: 'AGPL 3.0' },
+  { key: 'lgpl-3.0', label: 'LGPL 3.0' },
+]
+
 const FiltersPanel: React.FC<FiltersPanelProps> = ({ 
   className = '', 
-  selectedLabels: _selectedLabels, 
-  onToggleLabel: _onToggleLabel, 
+  selectedLabels, 
+  onToggleLabel, 
   selectedLanguage, 
   onChangeLanguage, 
   showTags = true,
@@ -102,6 +126,8 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
   onChangeFramework,
   selectedLastActivity = null,
   onChangeLastActivity,
+  selectedLicense = null,
+  onChangeLicense,
 }) => {
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     difficulty: true,
@@ -110,6 +136,8 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
     language: false,
     framework: false,
     activity: false,
+    tags: true,
+    license: false,
   })
 
   const toggleSection = (section: string) => {
@@ -140,24 +168,98 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
     return 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600'
   }
 
+  const handleClearFilters = () => {
+    if (onChangeDifficulty) onChangeDifficulty(null)
+    if (onChangeType) onChangeType(null)
+    if (onChangeFramework) onChangeFramework(null)
+    if (onChangeLastActivity) onChangeLastActivity(null)
+    if (onChangeLicense) onChangeLicense(null)
+    onChangeLanguage(null)
+    if (onToggleCategory) {
+      selectedCategories.forEach(c => onToggleCategory(c))
+    }
+    if (onToggleLabel) {
+      selectedLabels.forEach(label => onToggleLabel(label))
+    }
+  }
+
+  const hasActiveFilters =
+    !!selectedDifficulty ||
+    !!selectedType ||
+    !!selectedFramework ||
+    !!selectedLastActivity ||
+    !!selectedLanguage ||
+    (!!onChangeLicense && !!selectedLicense) ||
+    (selectedCategories && selectedCategories.length > 0 && !selectedCategories.includes('all')) ||
+    (selectedLabels && selectedLabels.length > 0)
+
   return (
-    <aside className={`bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg transition-colors duration-200 ${className}`}>
-      <div className="p-4">
-        <h2 className="text-base font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
+    <aside className={`rounded-2xl border border-slate-200 bg-white/95 shadow-sm transition-colors duration-200 dark:border-gray-700 dark:bg-gray-900 ${className}`}>
+      <div className="p-5 sm:p-6">
+        <h2 className="mb-4 flex items-center gap-2 text-base font-semibold text-gray-900 dark:text-gray-100">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
           </svg>
           Filters
         </h2>
-        
-        <div className="space-y-3">
+
+        <div className="space-y-5">
+          {/* Curated Tags */}
+          {showTags && (
+            <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 dark:border-gray-700 dark:bg-gray-800">
+              <button
+                type="button"
+                onClick={() => toggleSection('tags')}
+                className="flex w-full items-center justify-between text-sm font-semibold text-slate-800 transition hover:text-slate-900 dark:text-slate-100 dark:hover:text-slate-200"
+              >
+                <span className="flex items-center gap-2">
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a2 2 0 012-2h3.586a1 1 0 01.707.293l9.414 9.414a2 2 0 010 2.828l-3.172 3.172a2 2 0 01-2.828 0L4.293 8.121A1 1 0 014 7.414V5z" />
+                  </svg>
+                  High-signal tags
+                </span>
+                <svg
+                  className={`h-4 w-4 transition-transform ${expandedSections.tags ? 'rotate-180' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {expandedSections.tags && (
+                <div className="mt-3 space-y-2">
+                  {CURATED_LABELS.map((tag) => {
+                    const active = selectedLabels.includes(tag.key)
+                    return (
+                      <button
+                        key={tag.key}
+                        type="button"
+                        onClick={() => onToggleLabel(tag.key)}
+                        className={`w-full rounded-lg border px-3 py-2 text-left transition ${
+                          active
+                            ? 'border-slate-600 bg-slate-900 text-white shadow-sm dark:border-slate-500 dark:bg-slate-700'
+                            : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-100 dark:border-gray-700 dark:bg-gray-900 dark:text-slate-300 dark:hover:border-gray-600 dark:hover:bg-gray-800'
+                        }`}
+                      >
+                        <div className="text-sm font-semibold leading-tight">{tag.label}</div>
+                        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{tag.description}</p>
+                      </button>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Difficulty Filter - Always Visible, Most Important */}
           {showTags && onChangeDifficulty && (
-            <div className="border-b border-gray-200 dark:border-gray-700 pb-3">
+            <div className="space-y-3">
               <button
                 type="button"
                 onClick={() => toggleSection('difficulty')}
-                className="w-full flex items-center justify-between text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2 hover:text-slate-700 dark:hover:text-slate-300 transition-colors"
+                className="flex w-full items-center justify-between text-sm font-semibold text-gray-900 transition hover:text-slate-800 dark:text-gray-100 dark:hover:text-slate-200"
               >
                 <span className="flex items-center gap-2">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -181,10 +283,10 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
                       key={String(opt.key)}
                       type="button"
                       onClick={() => onChangeDifficulty(opt.key ?? null)}
-                      className={`px-3 py-2 rounded-md text-sm font-medium border-2 transition-all ${
+                      className={`rounded-md border px-3 py-2 text-sm font-medium transition ${
                         (selectedDifficulty ?? '') === (opt.key ?? '')
-                          ? getDifficultyColor(opt.key) + ' ring-2 ring-offset-1 ring-slate-400 dark:ring-slate-500'
-                          : 'bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:border-slate-400 dark:hover:border-slate-500'
+                          ? `${getDifficultyColor(opt.key)} shadow-sm`
+                          : 'border-gray-200 bg-gray-50 text-gray-700 hover:border-slate-300 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-slate-500'
                       }`}
                     >
                       {opt.label}
@@ -197,11 +299,11 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
 
           {/* Type Filter */}
           {showTags && onChangeType && (
-            <div className="border-b border-gray-200 dark:border-gray-700 pb-3">
+            <div className="space-y-3">
               <button
                 type="button"
                 onClick={() => toggleSection('type')}
-                className="w-full flex items-center justify-between text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2 hover:text-slate-700 dark:hover:text-slate-300 transition-colors"
+                className="flex w-full items-center justify-between text-sm font-semibold text-gray-900 transition hover:text-slate-800 dark:text-gray-100 dark:hover:text-slate-200"
               >
                 <span className="flex items-center gap-2">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -225,10 +327,10 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
                       key={String(opt.key)}
                       type="button"
                       onClick={() => onChangeType(opt.key ?? null)}
-                      className={`px-3 py-1.5 rounded-md text-xs font-medium border transition-all ${
+                      className={`rounded-md border px-3 py-1.5 text-xs font-medium transition ${
                         (selectedType ?? '') === (opt.key ?? '')
-                          ? 'bg-slate-700 dark:bg-slate-600 text-white border-slate-700 dark:border-slate-600'
-                          : 'bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700'
+                          ? 'border-slate-600 bg-slate-700 text-white dark:border-slate-500 dark:bg-slate-600'
+                          : 'border-gray-200 bg-gray-50 text-gray-700 hover:border-slate-300 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-slate-500'
                       }`}
                     >
                       {opt.label}
@@ -241,11 +343,11 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
 
           {/* Categories */}
           {showTags && onToggleCategory && !isMobile && (
-            <div className="border-b border-gray-200 dark:border-gray-700 pb-3">
+            <div className="space-y-3">
               <button
                 type="button"
                 onClick={() => toggleSection('category')}
-                className="w-full flex items-center justify-between text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2 hover:text-slate-700 dark:hover:text-slate-300 transition-colors"
+                className="flex w-full items-center justify-between text-sm font-semibold text-gray-900 transition hover:text-slate-800 dark:text-gray-100 dark:hover:text-slate-200"
               >
                 <span className="flex items-center gap-2">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -271,10 +373,10 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
                         key={cat.key}
                         type="button"
                         onClick={() => handleCategoryToggle(cat.key)}
-                        className={`px-3 py-1.5 rounded-md text-xs font-medium border transition-all ${
+                        className={`rounded-md border px-3 py-1.5 text-xs font-medium transition ${
                           active
-                            ? 'bg-slate-700 dark:bg-slate-600 text-white border-slate-700 dark:border-slate-600'
-                            : 'bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700'
+                            ? 'border-slate-600 bg-slate-700 text-white dark:border-slate-500 dark:bg-slate-600'
+                            : 'border-gray-200 bg-gray-50 text-gray-700 hover:border-slate-300 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-slate-500'
                         }`}
                       >
                         {cat.label}
@@ -287,11 +389,11 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
           )}
 
           {/* Language Filter */}
-          <div className="border-b border-gray-200 dark:border-gray-700 pb-3">
+          <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm dark:border-gray-700 dark:bg-gray-900">
             <button
               type="button"
               onClick={() => toggleSection('language')}
-              className="w-full flex items-center justify-between text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2 hover:text-slate-700 dark:hover:text-slate-300 transition-colors"
+              className="flex w-full items-center justify-between text-sm font-semibold text-slate-800 hover:text-slate-900 dark:text-slate-100 dark:hover:text-slate-200"
             >
               <span className="flex items-center gap-2">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -309,16 +411,16 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
               </svg>
             </button>
             {expandedSections.language && (
-              <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-1 custom-scrollbar">
+              <div className="mt-3 grid max-h-48 grid-cols-2 gap-2 overflow-y-auto pr-1 custom-scrollbar">
                 {POPULAR_LANGUAGES.map((opt) => (
                   <button
                     key={String(opt.key)}
                     type="button"
                     onClick={() => onChangeLanguage(opt.key ?? null)}
-                    className={`px-3 py-1.5 rounded-md text-xs font-medium border transition-all text-left ${
+                    className={`rounded-md border px-3 py-1.5 text-xs font-medium transition text-left ${
                       (selectedLanguage ?? '') === (opt.key ?? '')
-                        ? 'bg-slate-700 dark:bg-slate-600 text-white border-slate-700 dark:border-slate-600'
-                        : 'bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700'
+                        ? 'border-slate-600 bg-slate-700 text-white dark:border-slate-500 dark:bg-slate-600'
+                        : 'border-gray-200 bg-gray-50 text-gray-700 hover:border-slate-300 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-slate-500'
                     }`}
                   >
                     {opt.label}
@@ -328,13 +430,62 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
             )}
           </div>
 
+          {/* License Filter */}
+          {onChangeLicense && (
+            <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+              <button
+                type="button"
+                onClick={() => toggleSection('license')}
+                className="flex w-full items-center justify-between text-sm font-semibold text-slate-800 hover:text-slate-900 dark:text-slate-100 dark:hover:text-slate-200"
+              >
+                <span className="flex items-center gap-2">
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 7l7-4 7 4m-2 4l-5 3-5-3m0 4l5 3 5-3" />
+                  </svg>
+                  License
+                </span>
+                <svg
+                  className={`h-4 w-4 transition-transform ${expandedSections.license ? 'rotate-180' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {expandedSections.license && (
+                <div className="mt-3 grid grid-cols-1 gap-2">
+                  {POPULAR_LICENSES.map((opt) => (
+                    <button
+                      key={String(opt.key)}
+                      type="button"
+                      onClick={() => onChangeLicense(opt.key ?? null)}
+                      className={`flex items-center justify-between rounded-md border px-3 py-1.5 text-xs font-medium transition ${
+                        (selectedLicense ?? '') === (opt.key ?? '')
+                          ? 'border-slate-600 bg-slate-900 text-white shadow-sm dark:border-slate-500 dark:bg-slate-700'
+                          : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-100 dark:border-gray-700 dark:bg-gray-900 dark:text-slate-300 dark:hover:border-gray-600 dark:hover:bg-gray-800'
+                      }`}
+                    >
+                      <span>{opt.label}</span>
+                      {(selectedLicense ?? '') === (opt.key ?? '') && (
+                        <svg className="h-3.5 w-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Framework Filter */}
           {showTags && onChangeFramework && (
-            <div className="border-b border-gray-200 dark:border-gray-700 pb-3">
+            <div className="space-y-3">
               <button
                 type="button"
                 onClick={() => toggleSection('framework')}
-                className="w-full flex items-center justify-between text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2 hover:text-slate-700 dark:hover:text-slate-300 transition-colors"
+                className="flex w-full items-center justify-between text-sm font-semibold text-gray-900 transition hover:text-slate-800 dark:text-gray-100 dark:hover:text-slate-200"
               >
                 <span className="flex items-center gap-2">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -374,11 +525,11 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
 
           {/* Last Activity Filter */}
           {showTags && onChangeLastActivity && (
-            <div className="border-b border-gray-200 dark:border-gray-700 pb-3">
+            <div className="space-y-3">
               <button
                 type="button"
                 onClick={() => toggleSection('activity')}
-                className="w-full flex items-center justify-between text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2 hover:text-slate-700 dark:hover:text-slate-300 transition-colors"
+                className="flex w-full items-center justify-between text-sm font-semibold text-gray-900 transition hover:text-slate-800 dark:text-gray-100 dark:hover:text-slate-200"
               >
                 <span className="flex items-center gap-2">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -402,10 +553,10 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
                       key={String(opt.key)}
                       type="button"
                       onClick={() => onChangeLastActivity(opt.key ?? null)}
-                      className={`w-full px-3 py-1.5 rounded-md text-xs font-medium border transition-all text-left ${
+                      className={`w-full rounded-md border px-3 py-1.5 text-xs font-medium transition text-left ${
                         (selectedLastActivity ?? '') === (opt.key ?? '')
-                          ? 'bg-slate-700 dark:bg-slate-600 text-white border-slate-700 dark:border-slate-600'
-                          : 'bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700'
+                          ? 'border-slate-600 bg-slate-700 text-white dark:border-slate-500 dark:bg-slate-600'
+                          : 'border-gray-200 bg-gray-50 text-gray-700 hover:border-slate-300 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-slate-500'
                       }`}
                     >
                       {opt.label}
@@ -417,23 +568,13 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
           )}
 
           {/* Clear Filters Button */}
-          {(selectedDifficulty || selectedType || selectedFramework || selectedLanguage || selectedLastActivity ||
-            (selectedCategories && selectedCategories.length > 0 && !selectedCategories.includes('all'))) && (
+          {hasActiveFilters && (
             <button
               type="button"
-              onClick={() => {
-                if (onChangeDifficulty) onChangeDifficulty(null)
-                if (onChangeType) onChangeType(null)
-                if (onChangeFramework) onChangeFramework(null)
-                if (onChangeLastActivity) onChangeLastActivity(null)
-                onChangeLanguage(null)
-                if (onToggleCategory) {
-                  selectedCategories.forEach(c => onToggleCategory(c))
-                }
-              }}
-              className="w-full px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md border border-gray-300 dark:border-gray-600 transition-colors"
+              onClick={handleClearFilters}
+              className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-gray-700 dark:bg-gray-800 dark:text-slate-200 dark:hover:border-gray-600 dark:hover:text-white"
             >
-              Clear All Filters
+              Clear all filters
             </button>
           )}
         </div>
