@@ -156,7 +156,7 @@ const HomePage: React.FC = () => {
               onToggleLabel={toggleLabel}
               selectedLanguage={selectedLanguage}
               onChangeLanguage={setSelectedLanguage}
-              selectedLicense={selectedLicense}
+              selectedLicense={viewMode === 'repositories' ? selectedLicense : null}
               onChangeLicense={viewMode === 'repositories' ? setSelectedLicense : undefined}
               showTags={viewMode === 'issues'}
               selectedCategories={selectedCategories}
@@ -182,8 +182,6 @@ const HomePage: React.FC = () => {
                 onToggleLabel={toggleLabel}
                 selectedLanguage={selectedLanguage}
                 onChangeLanguage={setSelectedLanguage}
-              selectedLicense={selectedLicense}
-              onChangeLicense={viewMode === 'repositories' ? setSelectedLicense : undefined}
                 selectedCategories={selectedCategories}
                 onToggleCategory={toggleCategory}
                 selectedDifficulty={selectedDifficulty}
@@ -205,8 +203,8 @@ const HomePage: React.FC = () => {
                 onToggleLabel={() => {}}
                 selectedLanguage={selectedLanguage}
                 onChangeLanguage={setSelectedLanguage}
-              selectedLicense={selectedLicense}
-              onChangeLicense={setSelectedLicense}
+                selectedLicense={selectedLicense}
+                onChangeLicense={setSelectedLicense}
                 showTags={false}
               />
             </div>
