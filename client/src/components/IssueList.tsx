@@ -183,9 +183,9 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
   const shouldShowSkeleton = displayItems.length === 0 && isLoading
 
   return (
-    <section className={`relative overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm transition-colors duration-300 dark:border-gray-800 dark:bg-gray-900 ${className}`}>
+    <section className={`relative w-full max-w-full overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm transition-colors duration-300 dark:border-gray-800 dark:bg-gray-900 ${className}`}>
       <div className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-48 max-w-4xl rounded-b-[4rem] bg-gradient-to-b from-emerald-200/40 via-slate-100/50 to-transparent dark:from-emerald-500/10 dark:via-gray-800/10" aria-hidden="true" />
-      <div className="relative p-6 sm:p-8">
+      <div className="relative p-4 sm:p-6 md:p-8">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600 dark:text-emerald-300">Live issue feed</p>
@@ -229,7 +229,7 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
           </div>
         )}
 
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {shouldShowSkeleton
             ? Array.from({ length: 6 }).map((_, idx) => (
                 <article
@@ -267,10 +267,10 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
                     rel="noreferrer"
                     className="group flex h-full w-full flex-col rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-slate-400 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600"
                   >
-                    <div className="flex flex-wrap items-start justify-between gap-3 sm:flex-row sm:items-center">
+                    <div className="flex flex-wrap items-start justify-between gap-3">
                       <div className="min-w-0">
                         <p className="truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{repo}</p>
-                        <p className="text-xs text-slate-400 dark:text-slate-500">Issue #{issue.number}</p>
+                        <p className="text-[11px] text-slate-400 dark:text-slate-500">Issue #{issue.number}</p>
                       </div>
                       <DifficultyBadge difficulty={difficulty} />
                     </div>
@@ -279,7 +279,7 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
                       {issue.title}
                     </h3>
 
-                    <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-300 sm:gap-3">
+                    <div className="mt-3 flex flex-wrap items-center gap-2 text-[11px] text-slate-500 dark:text-slate-300 sm:gap-3">
                       <span className="inline-flex items-center gap-1">
                         <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -310,7 +310,7 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
                     </div>
 
                     {issue.labels && issue.labels.length > 0 && (
-                      <div className="mt-4 flex flex-wrap gap-1.5">
+                      <div className="mt-4 flex flex-wrap gap-1">
                         {issue.labels.slice(0, 3).map((l: any, i: number) => {
                           const labelLower = l.name.toLowerCase()
                           const icon = getLabelIcon(l.name || '')

@@ -48,9 +48,9 @@ const RepositoryList: React.FC<RepositoryListProps> = ({ className = '', languag
   const shouldShowSkeleton = displayItems.length === 0 && displayLoading
 
   return (
-    <section className={`relative overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm transition-colors duration-300 dark:border-gray-800 dark:bg-gray-900 ${className}`}>
-      <div className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-48 max-w-4xl rounded-b-[4rem] bg-gradient-to-b from-slate-200/40 via-slate-100/50 to-transparent dark:from-slate-700/20 dark:via-slate-800/10" aria-hidden="true" />
-      <div className="relative p-6 sm:p-8">
+    <section className={`relative w-full max-w-full overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm transition-colors duration-300 dark:border-gray-800 dark:bg-gray-900 ${className}`}>
+      <div className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-48 max-w-4xl rounded-b-[4rem] bg-gradient-to-b from-blue-200/40 via-slate-100/50 to-transparent dark:from-blue-500/10 dark:via-gray-800/10" aria-hidden="true" />
+      <div className="relative p-4 sm:p-6 md:p-8">
         {/* Search Input */}
         <div className="mb-6">
           <div className="relative">
@@ -148,7 +148,7 @@ const RepositoryList: React.FC<RepositoryListProps> = ({ className = '', languag
           </div>
         )}
 
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {shouldShowSkeleton
             ? Array.from({ length: 6 }).map((_, idx) => (
                 <article
