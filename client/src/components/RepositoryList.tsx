@@ -153,7 +153,7 @@ const RepositoryList: React.FC<RepositoryListProps> = ({ className = '', languag
             ? Array.from({ length: 6 }).map((_, idx) => (
                 <article
                   key={`placeholder-${idx}`}
-                  className="h-full rounded-2xl border border-slate-200 bg-white p-5 shadow-sm animate-pulse dark:border-gray-700 dark:bg-gray-800"
+                  className="h-full w-full rounded-2xl border border-slate-200 bg-white p-5 shadow-sm animate-pulse dark:border-gray-700 dark:bg-gray-800"
                 >
                   <div className="flex items-start gap-4">
                     <div className="h-12 w-12 rounded-full bg-slate-200 dark:bg-gray-700" />
@@ -174,7 +174,7 @@ const RepositoryList: React.FC<RepositoryListProps> = ({ className = '', languag
             : displayItems.map((repo: any) => (
                 <article
                   key={repo.id}
-                  className="group flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-slate-400 hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:hover:border-slate-500"
+                  className="group flex h-full w-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-slate-400 hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:hover:border-slate-500"
                   onClick={() => setSelectedRepo(repo.full_name)}
                 >
                   <div className="flex flex-1 flex-col gap-4">
@@ -206,7 +206,7 @@ const RepositoryList: React.FC<RepositoryListProps> = ({ className = '', languag
                       </div>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
+                    <div className="flex flex-wrap items-center gap-1.5 text-xs text-slate-600 dark:text-slate-300">
                       {repo.language && (
                         <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-100 px-2 py-0.5 text-xs font-medium dark:border-gray-700 dark:bg-gray-700/60">
                           <span className="h-2 w-2 rounded-full bg-emerald-500" />

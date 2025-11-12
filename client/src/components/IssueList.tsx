@@ -234,7 +234,7 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
             ? Array.from({ length: 6 }).map((_, idx) => (
                 <article
                   key={`placeholder-${idx}`}
-                  className="h-full rounded-2xl border border-slate-200 bg-white p-5 shadow-sm animate-pulse dark:border-gray-700 dark:bg-gray-800"
+                  className="h-full w-full rounded-2xl border border-slate-200 bg-white p-5 shadow-sm animate-pulse dark:border-gray-700 dark:bg-gray-800"
                 >
                   <div className="mb-4 flex items-start justify-between gap-3">
                     <div className="h-4 w-2/3 rounded bg-slate-200 dark:bg-gray-700" />
@@ -265,21 +265,21 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
                     href={issue.html_url}
                     target="_blank"
                     rel="noreferrer"
-                    className="group flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-slate-400 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600"
+                    className="group flex h-full w-full flex-col rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-slate-400 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600"
                   >
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">{repo}</p>
+                    <div className="flex items-start justify-between gap-3 sm:flex-row sm:items-center">
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{repo}</p>
                         <p className="text-xs text-slate-400 dark:text-slate-500">Issue #{issue.number}</p>
                       </div>
                       <DifficultyBadge difficulty={difficulty} />
                     </div>
 
-                    <h3 className="mt-3 text-base font-semibold text-slate-900 transition group-hover:text-slate-600 dark:text-slate-100 dark:group-hover:text-slate-200">
+                    <h3 className="mt-3 text-sm font-semibold leading-snug text-slate-900 transition group-hover:text-slate-600 dark:text-slate-100 dark:group-hover:text-slate-200 sm:text-base">
                       {issue.title}
                     </h3>
 
-                    <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-300">
+                    <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-300 sm:gap-3">
                       <span className="inline-flex items-center gap-1">
                         <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -348,7 +348,7 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
         </div>
 
         {totalCount > 0 && (
-          <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
             <button
               type="button"
               onClick={() => setPage((p) => Math.max(1, p - 1))}
