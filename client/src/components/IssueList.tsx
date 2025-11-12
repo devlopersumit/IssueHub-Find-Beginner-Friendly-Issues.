@@ -267,7 +267,7 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
                     rel="noreferrer"
                     className="group flex h-full w-full flex-col rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-slate-400 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600"
                   >
-                    <div className="flex items-start justify-between gap-3 sm:flex-row sm:items-center">
+                    <div className="flex flex-wrap items-start justify-between gap-3 sm:flex-row sm:items-center">
                       <div className="min-w-0">
                         <p className="truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{repo}</p>
                         <p className="text-xs text-slate-400 dark:text-slate-500">Issue #{issue.number}</p>
@@ -275,7 +275,7 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
                       <DifficultyBadge difficulty={difficulty} />
                     </div>
 
-                    <h3 className="mt-3 text-sm font-semibold leading-snug text-slate-900 transition group-hover:text-slate-600 dark:text-slate-100 dark:group-hover:text-slate-200 sm:text-base">
+                    <h3 className="mt-3 w-full text-sm font-semibold leading-snug text-slate-900 transition group-hover:text-slate-600 dark:text-slate-100 dark:group-hover:text-slate-200 sm:text-base">
                       {issue.title}
                     </h3>
 
