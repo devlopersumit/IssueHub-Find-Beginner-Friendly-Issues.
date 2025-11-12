@@ -7,6 +7,7 @@ export type QueryBuilderParams = {
   selectedLabels?: string[]
   selectedCategories?: string[]
   selectedLanguage?: string | null
+  selectedLicense?: string | null
   selectedDifficulty?: string | null
   selectedType?: string | null
   selectedFramework?: string | null
@@ -291,6 +292,7 @@ export function buildGitHubQuery(params: QueryBuilderParams): string {
                        params.selectedType || 
                        params.selectedFramework || 
                        params.selectedLanguage ||
+                       params.selectedLicense ||
                        params.selectedLastActivity ||
                        (params.selectedCategories && params.selectedCategories.length > 0 && !params.selectedCategories.includes('all')) ||
                        (params.selectedLabels && params.selectedLabels.length > 0) ||
