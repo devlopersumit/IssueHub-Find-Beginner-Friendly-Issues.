@@ -49,11 +49,11 @@ const MobileCategoryTabs: React.FC<MobileCategoryTabsProps> = ({
                 onClick={() => handleCategoryToggle(cat.key)}
                 className={`shrink-0 flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-medium transition-colors whitespace-nowrap ${
                   active 
-                    ? 'bg-slate-700 dark:bg-slate-600 text-white shadow-md' 
+                    ? 'bg-slate-700 dark:bg-slate-600 !text-white shadow-md' 
                     : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600'
                 }`}
               >
-                <span>{cat.label}</span>
+                <span className={active ? 'text-white' : ''}>{cat.label}</span>
               </button>
             )
           })}
