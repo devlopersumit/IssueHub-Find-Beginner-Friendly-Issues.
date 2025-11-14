@@ -71,15 +71,15 @@ const HomePage: React.FC = () => {
         <section className="mb-10 rounded-3xl border border-slate-200 bg-white px-6 py-8 shadow-sm dark:border-gray-800 dark:bg-gray-900">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div className="space-y-2 max-w-2xl">
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Repository explorer</p>
-              <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">Browse projects ready for contribution</h2>
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Explore repositories</p>
+              <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">Find open-source projects you'll love</h2>
               <p className="text-sm text-slate-600 dark:text-slate-300">
-                Jump into a dedicated repository directory with filters for language and license so you can evaluate projects quickly.
+                Browse thousands of GitHub repositories. Filter by programming language and license to find projects that match your interests.
               </p>
             </div>
             <Link
               to="/repositories"
-              className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-5 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-gray-700 dark:bg-gray-800 dark:text-slate-200 dark:hover:border-gray-600 dark:hover:text-white"
+              className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:bg-slate-100 dark:text-gray-900 dark:hover:bg-slate-200"
             >
               Browse repositories
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
