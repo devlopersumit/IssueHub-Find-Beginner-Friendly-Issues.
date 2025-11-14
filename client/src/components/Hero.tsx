@@ -46,10 +46,10 @@ const Hero: React.FC = () => {
 
             <div className="space-y-4">
               <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-5xl lg:text-6xl">
-                Find the right issues, join the right teams, build open source faster.
+                Find GitHub issues that match your skills
               </h1>
               <p className="text-base text-slate-600 dark:text-slate-300 sm:text-lg lg:text-xl">
-                IssueFinder curates the open-source universe into a focused catalog so you can discover high-impact repositories, filter by the skills you have, and ship value from day one.
+                Stop wasting time searching. We show you open-source projects and issues that are perfect for you. Filter by your favorite programming language, difficulty level, and start contributing today.
               </p>
             </div>
 
@@ -72,17 +72,17 @@ const Hero: React.FC = () => {
               <svg className="h-5 w-5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
-              Updated hourly with only unassigned, contributor-friendly work.
+              Fresh issues updated every hour. All ready for new contributors.
             </div>
           </div>
 
           <div className="relative">
             <div className="rounded-2xl border border-white/80 bg-white/70 p-6 shadow-xl shadow-slate-200/50 backdrop-blur dark:border-gray-700/60 dark:bg-gray-900/60 dark:shadow-black/20">
               <div className="mb-6">
-                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Why developers choose IssueFinder</p>
-                <h2 className="mt-2 text-2xl font-semibold text-slate-900 dark:text-slate-100">Stay focused on shipping</h2>
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Why developers love IssueFinder</p>
+                <h2 className="mt-2 text-2xl font-semibold text-slate-900 dark:text-slate-100">Save time, find better projects</h2>
                 <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">
-                  Skip the generic issue lists. Targeted filters and curated metadata put the right opportunities in front of you faster.
+                  No more endless scrolling. We filter out the noise and show you only the issues that match what you're looking for.
                 </p>
               </div>
               <dl className="grid grid-cols-2 gap-4 sm:gap-6">
