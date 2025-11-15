@@ -58,29 +58,40 @@ export function useFetchIssues(query: string, page: number = 1, perPage: number 
         })
 
         if (!response.ok) {
-          // Handle rate limiting (403) with better error message
           if (response.status === 403) {
             const rateLimitRemaining = response.headers.get('X-RateLimit-Remaining')
             const rateLimitReset = response.headers.get('X-RateLimit-Reset')
             
             if (rateLimitRemaining === '0') {
               const resetTime = rateLimitReset ? new Date(parseInt(rateLimitReset) * 1000).toLocaleTimeString() : 'soon'
-              throw new Error(`GitHub API rate limit exceeded. Please try again after ${resetTime}.`)
+              throw new Error(`Rate limit exceeded. Try again after ${resetTime}.`)
             } else {
-              throw new Error(`GitHub API access forbidden. This might be due to rate limiting or query complexity. Try simplifying your filters.`)
+              throw new Error(`Access forbidden. Your search might be too complex. Try simplifying your filters.`)
             }
           }
           
-          throw new Error(`GitHub API error: ${response.status} ${response.statusText}`)
+          if (response.status === 422) {
+            throw new Error(`Invalid search query. Try adjusting your filters.`)
+          }
+          
+          if (response.status >= 500) {
+            throw new Error(`GitHub service is temporarily unavailable. Please try again later.`)
+          }
+          
+          throw new Error(`Unable to fetch issues. Please try again.`)
         }
 
         const json: GithubSearchResponse = await response.json()
         setData(json)
       } catch (err: unknown) {
         if ((err as any)?.name === 'AbortError') return
-        const error = err as Error
-        setError(error)
-        // Set empty data on error so UI shows error state
+        
+        if (err instanceof TypeError && err.message.includes('fetch')) {
+          setError(new Error('Network error. Please check your connection.'))
+        } else {
+          setError(err as Error)
+        }
+        
         setData({ total_count: 0, incomplete_results: false, items: [] })
       } finally {
         setIsLoading(false)
@@ -96,5 +107,6 @@ export function useFetchIssues(query: string, page: number = 1, perPage: number 
 
   return { data, isLoading, error }
 }
+
 
 
