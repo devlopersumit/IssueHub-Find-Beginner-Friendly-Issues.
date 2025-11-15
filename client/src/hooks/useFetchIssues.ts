@@ -49,12 +49,6 @@ export function useFetchIssues(query: string, page: number = 1, perPage: number 
 
         const url = `https://api.github.com/search/issues?q=${encodeURIComponent(query)}&page=${page}&per_page=${perPage}`
 
-        // Debug: log the query being used (always log for debugging)
-        console.log('=== GitHub API Request ===')
-        console.log('Query:', query)
-        console.log('URL:', url)
-        console.log('Page:', page, 'Per Page:', perPage)
-
         const response = await fetch(url, {
           method: 'GET',
           headers: {
@@ -65,7 +59,6 @@ export function useFetchIssues(query: string, page: number = 1, perPage: number 
 
         if (!response.ok) {
           const errorText = await response.text()
-          console.error('GitHub API Error:', response.status, response.statusText, errorText)
           
           // Handle rate limiting (403) with better error message
           if (response.status === 403) {
@@ -84,25 +77,10 @@ export function useFetchIssues(query: string, page: number = 1, perPage: number 
         }
 
         const json: GithubSearchResponse = await response.json()
-        
-        // Debug: log results (always log for debugging)
-        console.log('=== GitHub API Response ===')
-        console.log('Total count:', json.total_count, 'issues found')
-        console.log('Incomplete results:', json.incomplete_results)
-        console.log('Items returned:', json.items?.length || 0)
-        if (json.total_count === 0) {
-          console.warn('⚠️ No issues found with the current query')
-          console.log('Query used:', query)
-        } else {
-          console.log('✓ Issues found - query is working')
-        }
-        console.log('==========================')
-        
         setData(json)
       } catch (err: unknown) {
         if ((err as any)?.name === 'AbortError') return
         const error = err as Error
-        console.error('Error fetching issues:', error)
         setError(error)
         // Set empty data on error so UI shows error state
         setData({ total_count: 0, incomplete_results: false, items: [] })
