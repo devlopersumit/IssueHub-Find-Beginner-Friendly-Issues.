@@ -117,7 +117,9 @@ const RepositoryList: React.FC<RepositoryListProps> = ({ className = '', languag
                   Loading…
                 </>
               ) : displayError ? (
-                <span className="text-red-600 dark:text-red-400">Error loading</span>
+                <span className="text-red-600 dark:text-red-400">
+                  {displayError.message || 'Error loading repositories'}
+                </span>
               ) : (
                 <>
                   <svg className="h-4 w-4 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -139,12 +141,23 @@ const RepositoryList: React.FC<RepositoryListProps> = ({ className = '', languag
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               )}
             </svg>
-            <h3 className="mt-3 text-sm font-semibold text-slate-900 dark:text-slate-100">
-              {isSearchMode ? 'No repositories found' : 'No repositories found'}
-            </h3>
+            <h3 className="mt-3 text-sm font-semibold text-slate-900 dark:text-slate-100">No repositories found</h3>
             <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-              {isSearchMode ? 'Try searching with a different name or keyword.' : 'Change your filters or try a different programming language.'}
+              {isSearchMode 
+                ? 'Try a different repository name or search term.' 
+                : 'Try changing the language filter or removing some filters to see more results.'}
             </p>
+          </div>
+        )}
+
+        {displayItems.length === 0 && !displayLoading && displayError && (
+          <div className="mt-10 rounded-2xl border border-red-200 bg-red-50/60 px-6 py-12 text-center dark:border-red-800/50 dark:bg-red-900/20">
+            <svg className="mx-auto h-12 w-12 text-red-400 dark:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <h3 className="mt-3 text-sm font-semibold text-red-900 dark:text-red-100">Unable to load repositories</h3>
+            <p className="mt-1 text-sm text-red-700 dark:text-red-300">{displayError.message || 'An error occurred while fetching repositories.'}</p>
+            <p className="mt-3 text-xs text-red-600 dark:text-red-400">Please try again or refresh the page.</p>
           </div>
         )}
 
