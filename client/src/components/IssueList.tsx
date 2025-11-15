@@ -202,11 +202,7 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
               </>
             ) : error ? (
               <span className="text-red-600 dark:text-red-400">
-                {error.message.includes('rate limit')
-                  ? 'GitHub API rate limit reached. Try again shortly.'
-                  : error.message.includes('forbidden')
-                  ? 'GitHub API access blocked. Adjust filters or retry.'
-                  : 'Error loading issues'}
+                {error.message}
               </span>
             ) : (
               <>
@@ -225,7 +221,18 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
             <h3 className="mt-3 text-sm font-semibold text-slate-900 dark:text-slate-100">No issues found</h3>
-            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Try changing your filters or pick a different programming language.</p>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Try removing some filters, changing the language, or searching with different keywords.</p>
+          </div>
+        )}
+
+        {displayItems.length === 0 && !isLoading && error && (
+          <div className="mt-10 rounded-2xl border border-red-200 bg-red-50/60 px-6 py-12 text-center dark:border-red-800/50 dark:bg-red-900/20">
+            <svg className="mx-auto h-12 w-12 text-red-400 dark:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <h3 className="mt-3 text-sm font-semibold text-red-900 dark:text-red-100">Unable to load issues</h3>
+            <p className="mt-1 text-sm text-red-700 dark:text-red-300">{error.message}</p>
+            <p className="mt-3 text-xs text-red-600 dark:text-red-400">Try refreshing the page or simplifying your search filters.</p>
           </div>
         )}
 
