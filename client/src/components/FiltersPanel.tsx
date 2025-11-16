@@ -34,19 +34,53 @@ const ISSUE_CATEGORIES = [
   { key: 'documentation', label: 'Documentation' },
 ]
 
-// Most popular languages only
+// Expanded language list (includes popular + common others)
 const POPULAR_LANGUAGES = [
   { key: null, label: 'Any Language' },
+  // Web
   { key: 'javascript', label: 'JavaScript' },
   { key: 'typescript', label: 'TypeScript' },
+  { key: 'html', label: 'HTML' },
+  { key: 'css', label: 'CSS' },
+  // General purpose
   { key: 'python', label: 'Python' },
   { key: 'java', label: 'Java' },
-  { key: 'go', label: 'Go' },
-  { key: 'rust', label: 'Rust' },
+  { key: 'c', label: 'C' },
   { key: 'cpp', label: 'C++' },
   { key: 'csharp', label: 'C#' },
+  { key: 'go', label: 'Go' },
+  { key: 'rust', label: 'Rust' },
   { key: 'php', label: 'PHP' },
   { key: 'ruby', label: 'Ruby' },
+  { key: 'swift', label: 'Swift' },
+  { key: 'kotlin', label: 'Kotlin' },
+  { key: 'scala', label: 'Scala' },
+  { key: 'dart', label: 'Dart' },
+  { key: 'objective-c', label: 'Objective-C' },
+  { key: 'shell', label: 'Shell' },
+  { key: 'bash', label: 'Bash' },
+  // Data/Science
+  { key: 'r', label: 'R' },
+  { key: 'julia', label: 'Julia' },
+  { key: 'matlab', label: 'MATLAB' },
+  // Scripting/others
+  { key: 'perl', label: 'Perl' },
+  { key: 'lua', label: 'Lua' },
+  { key: 'haskell', label: 'Haskell' },
+  { key: 'elixir', label: 'Elixir' },
+  { key: 'erlang', label: 'Erlang' },
+  { key: 'clojure', label: 'Clojure' },
+  { key: 'powershell', label: 'PowerShell' },
+  { key: 'groovy', label: 'Groovy' },
+  { key: 'nim', label: 'Nim' },
+  { key: 'zig', label: 'Zig' },
+  { key: 'crystal', label: 'Crystal' },
+  { key: 'solidity', label: 'Solidity' },
+  { key: 'reason', label: 'ReasonML' },
+  { key: 'ocaml', label: 'OCaml' },
+  { key: 'fsharp', label: 'F#' },
+  { key: 'elm', label: 'Elm' },
+  { key: 'svelte', label: 'Svelte' },
 ]
 
 const DIFFICULTY_LEVELS = [
