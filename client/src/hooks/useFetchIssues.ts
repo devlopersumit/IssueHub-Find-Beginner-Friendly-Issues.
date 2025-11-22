@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useMemo } from 'react'
+import { getCached, setCached } from '../utils/requestCache'
 
 type GithubIssueItem = {
   id: number
@@ -9,6 +10,7 @@ type GithubIssueItem = {
   repository_url: string
   labels: Array<{ name?: string; color?: string }>
   created_at: string
+  comments?: number
 }
 
 type GithubSearchResponse = { 
@@ -29,6 +31,8 @@ export function useFetchIssues(query: string, page: number = 1, perPage: number 
   const [error, setError] = useState<Error | null>(null)
   const abortRef = useRef<AbortController | null>(null)
 
+  const cacheKey = useMemo(() => `issues_${query}_${page}_${perPage}`, [query, page, perPage])
+
   useEffect(() => {
     if (abortRef.current) {
       abortRef.current.abort()
@@ -43,6 +47,14 @@ export function useFetchIssues(query: string, page: number = 1, perPage: number 
         // Don't fetch if query is empty
         if (!query || query.trim() === '') {
           setData({ total_count: 0, incomplete_results: false, items: [] })
+          setIsLoading(false)
+          return
+        }
+
+        // Check cache first
+        const cached = getCached<GithubSearchResponse>(cacheKey)
+        if (cached) {
+          setData(cached)
           setIsLoading(false)
           return
         }
@@ -82,6 +94,7 @@ export function useFetchIssues(query: string, page: number = 1, perPage: number 
         }
 
         const json: GithubSearchResponse = await response.json()
+        setCached(cacheKey, json)
         setData(json)
       } catch (err: unknown) {
         if ((err as any)?.name === 'AbortError') return
