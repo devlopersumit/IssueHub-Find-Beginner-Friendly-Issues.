@@ -121,6 +121,24 @@ export function buildGitHubQuery(params: QueryBuilderParams): string {
   parts.push('type:issue')
   parts.push('no:assignee')
   
+  const now = new Date()
+  const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+  const year = thirtyDaysAgo.getFullYear()
+  const month = String(thirtyDaysAgo.getMonth() + 1).padStart(2, '0')
+  const day = String(thirtyDaysAgo.getDate()).padStart(2, '0')
+  const dateStr = `${year}-${month}-${day}`
+  
+  if (params.selectedLastActivity) {
+    const activityQuery = getLastActivityQuery(params.selectedLastActivity)
+    if (activityQuery) {
+      parts.push(activityQuery)
+    } else {
+      parts.push(`created:>${dateStr}`)
+    }
+  } else {
+    parts.push(`created:>${dateStr}`)
+  }
+  
   if (params.selectedDifficulty) {
     const difficultyConfig = getDifficultyLabels(params.selectedDifficulty)
     
@@ -129,6 +147,14 @@ export function buildGitHubQuery(params: QueryBuilderParams): string {
       parts.push('state:open')
       parts.push('type:issue')
       parts.push('no:assignee')
+      
+      const now = new Date()
+      const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+      const year = thirtyDaysAgo.getFullYear()
+      const month = String(thirtyDaysAgo.getMonth() + 1).padStart(2, '0')
+      const day = String(thirtyDaysAgo.getDate()).padStart(2, '0')
+      const dateStr = `${year}-${month}-${day}`
+      parts.push(`created:>${dateStr}`)
       parts.push('(label:"expert" OR label:"advanced" OR label:"hard" OR label:"difficult" OR label:"complex" OR label:"challenging")')
       parts.push('-label:"good first issue"')
       parts.push('-label:"good-first-issue"')
@@ -187,12 +213,6 @@ export function buildGitHubQuery(params: QueryBuilderParams): string {
     params.selectedLabels.forEach((l) => parts.push(`label:"${l}"`))
   }
   
-  if (params.selectedDifficulty !== 'advanced' && params.selectedLastActivity) {
-    const activityQuery = getLastActivityQuery(params.selectedLastActivity)
-    if (activityQuery) {
-      parts.push(activityQuery)
-    }
-  }
   
   const query = parts.join(' ')
   
@@ -206,12 +226,14 @@ export function buildGitHubQuery(params: QueryBuilderParams): string {
                        (params.selectedLabels && params.selectedLabels.length > 0) ||
                        (params.searchTerm && params.searchTerm.trim())
   
-  if (!hasAnyFilter && query === 'state:open type:issue no:assignee') {
-    return 'state:open type:issue no:assignee (label:"good first issue" OR label:"help wanted")'
-  }
+  const baseDateFilter = `created:>${dateStr}`
   
+  if (!hasAnyFilter && query === `state:open type:issue no:assignee ${baseDateFilter}`) {
+    return `state:open type:issue no:assignee ${baseDateFilter} (label:"good first issue" OR label:"help wanted")`
+  }
+
   if (params.selectedDifficulty === 'advanced') {
-    const advancedQuery = 'state:open type:issue no:assignee (label:"expert" OR label:"advanced" OR label:"hard" OR label:"difficult" OR label:"complex" OR label:"challenging") -label:"good first issue" -label:"good-first-issue" -label:"first-timers-only" -label:"help wanted" -label:"help-wanted"'
+    const advancedQuery = `state:open type:issue no:assignee ${baseDateFilter} (label:"expert" OR label:"advanced" OR label:"hard" OR label:"difficult" OR label:"complex" OR label:"challenging") -label:"good first issue" -label:"good-first-issue" -label:"first-timers-only" -label:"help wanted" -label:"help-wanted"`
     return advancedQuery
   }
   
