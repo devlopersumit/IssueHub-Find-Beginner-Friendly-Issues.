@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react'
 import { useFetchIssues } from '../hooks/useFetchIssues'
 import DifficultyBadge from './DifficultyBadge'
+import FreshnessIndicator from './FreshnessIndicator'
 import { detectDifficulty } from '../utils/difficulty'
 import type { NaturalLanguage } from '../utils/languageDetection'
 import { filterByLanguage } from '../utils/languageDetection'
 import { fetchRepositoryLanguages } from '../utils/repoLanguages'
 import { useSavedIssues } from '../hooks/useSavedIssues'
 import { LoadingProgress } from './LoadingProgress'
+import { calculateFreshness } from '../utils/issueFreshness'
 
 type IssueListProps = {
   className?: string
@@ -26,6 +28,7 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
     repository_url: string
     labels: Array<{ name?: string; color?: string }>
     created_at: string
+    updated_at?: string
     comments?: number
   }
   
@@ -52,14 +55,24 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
 
       if (newRepos.length > 0) {
         const uniqueRepos = Array.from(new Set(newRepos))
-        uniqueRepos.forEach(async (repoUrl) => {
+        
+        const fetchLanguagesWithDelay = async (repoUrl: string, delay: number) => {
+          await new Promise(resolve => setTimeout(resolve, delay))
+          
           if (!languagesFetchedRef.current.has(repoUrl)) {
             languagesFetchedRef.current.add(repoUrl)
-            const languages = await fetchRepositoryLanguages(repoUrl)
-            if (languages.length > 0) {
-              setRepoLanguages(prev => ({ ...prev, [repoUrl]: languages }))
+            try {
+              const languages = await fetchRepositoryLanguages(repoUrl)
+              if (languages.length > 0) {
+                setRepoLanguages(prev => ({ ...prev, [repoUrl]: languages }))
+              }
+            } catch (error) {
             }
           }
+        }
+        
+        uniqueRepos.forEach((repoUrl, index) => {
+          fetchLanguagesWithDelay(repoUrl, index * 200)
         })
       }
     } else {
@@ -67,18 +80,53 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
     }
   }, [data])
 
-  const filteredItems = useMemo(() => {
-    if (naturalLanguageFilter.length === 0) {
-      return items
+  const filteredAndSortedItems = useMemo(() => {
+    let result = items
+
+    if (naturalLanguageFilter.length > 0) {
+      result = filterByLanguage(result, naturalLanguageFilter)
     }
-    return filterByLanguage(items, naturalLanguageFilter)
+
+    result = [...result].sort((a, b) => {
+      const freshnessA = calculateFreshness(a.updated_at, a.created_at)
+      const freshnessB = calculateFreshness(b.updated_at, b.created_at)
+      
+      const statusOrder: Record<string, number> = {
+        'active': 0,
+        'stale': 1,
+        'inactive': 2
+      }
+      
+      const orderA = statusOrder[freshnessA.status] ?? 2
+      const orderB = statusOrder[freshnessB.status] ?? 2
+      
+      if (orderA !== orderB) {
+        return orderA - orderB
+      }
+      
+      const dateA = new Date(a.updated_at || a.created_at).getTime()
+      const dateB = new Date(b.updated_at || b.created_at).getTime()
+      
+      return dateB - dateA
+    })
+
+    return result
   }, [items, naturalLanguageFilter])
 
   const totalCount = data?.total_count ?? 0
-  const totalPages = Math.max(1, Math.ceil(totalCount / perPage))
+  const githubMaxResults = 1000
+  const maxAllowedPages = Math.floor(githubMaxResults / perPage)
+  const actualTotalPages = Math.max(1, Math.ceil(totalCount / perPage))
+  const totalPages = Math.min(actualTotalPages, maxAllowedPages)
   const hasPrevPage = page > 1
   const hasNextPage = page < totalPages
-  const displayItems = filteredItems
+  const displayItems = filteredAndSortedItems
+  
+  useEffect(() => {
+    if (page > totalPages && totalPages > 0) {
+      setPage(totalPages)
+    }
+  }, [page, totalPages])
   
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
@@ -317,6 +365,7 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
                 const difficulty = detectDifficulty(issue.labels || [])
                 const repoLangs = repoLanguages[issue.repository_url] || []
                 const primaryLanguage = repoLangs.length > 0 ? repoLangs[0] : null
+                const freshness = calculateFreshness(issue.updated_at, issue.created_at)
 
                 const saved = isSaved(issue.id)
                 
@@ -363,6 +412,11 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
                           )}
                         </button>
                         <DifficultyBadge difficulty={difficulty} />
+                        <FreshnessIndicator 
+                          status={freshness.status} 
+                          label={freshness.label}
+                          description={freshness.description}
+                        />
                       </div>
                     </div>
 
@@ -463,13 +517,74 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
               Previous
             </button>
 
-            <div className="flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-xs font-semibold text-emerald-700 dark:border-emerald-900/40 dark:bg-emerald-900/10 dark:text-emerald-300">
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h3.382a1 1 0 01.894.553l1.447 2.894A1 1 0 0010.618 7H19a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V4z" />
-              </svg>
-              Page {page} of {totalPages}
-              <span className="hidden text-slate-500 dark:text-slate-300 sm:inline">•</span>
-              <span className="hidden text-slate-600 dark:text-slate-300 sm:inline">{totalCount.toLocaleString()} total issues</span>
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-xs font-semibold text-emerald-700 dark:border-emerald-900/40 dark:bg-emerald-900/10 dark:text-emerald-300">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h3.382a1 1 0 01.894.553l1.447 2.894A1 1 0 0010.618 7H19a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V4z" />
+                </svg>
+                Page {page} of {totalPages}
+                {actualTotalPages > maxAllowedPages && (
+                  <span className="ml-1 text-[10px] text-amber-600 dark:text-amber-400" title={`GitHub API limit: showing first ${githubMaxResults.toLocaleString()} results`}>
+                    (max {maxAllowedPages})
+                  </span>
+                )}
+                <span className="hidden text-slate-500 dark:text-slate-300 sm:inline">•</span>
+                <span className="hidden text-slate-600 dark:text-slate-300 sm:inline">{totalCount.toLocaleString()} total issues</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="text-xs text-slate-600 dark:text-slate-400">Go to:</span>
+                <input
+                  type="number"
+                  min="1"
+                  max={totalPages}
+                  value={page}
+                  onChange={(e) => {
+                    const input = e.target as HTMLInputElement
+                    const value = parseInt(input.value)
+                    if (!isNaN(value)) {
+                      if (value >= 1 && value <= totalPages) {
+                        setPage(value)
+                      } else if (value > totalPages) {
+                        const validPage = totalPages
+                        setPage(validPage)
+                        input.value = validPage.toString()
+                      } else if (value < 1) {
+                        setPage(1)
+                        input.value = '1'
+                      }
+                    }
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      const input = e.target as HTMLInputElement
+                      const value = parseInt(input.value)
+                      if (!isNaN(value)) {
+                        if (value >= 1 && value <= totalPages) {
+                          setPage(value)
+                        } else if (value > totalPages) {
+                          const validPage = totalPages
+                          setPage(validPage)
+                          input.value = validPage.toString()
+                        } else if (value < 1) {
+                          setPage(1)
+                          input.value = '1'
+                        }
+                      } else {
+                        input.value = page.toString()
+                      }
+                    }
+                  }}
+                  onBlur={(e) => {
+                    const input = e.target as HTMLInputElement
+                    const value = parseInt(input.value)
+                    if (isNaN(value) || value < 1 || value > totalPages) {
+                      input.value = page.toString()
+                    }
+                  }}
+                  className="w-16 rounded-lg border border-emerald-200 bg-white px-2 py-1 text-center text-xs font-semibold text-emerald-700 shadow-sm focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200 dark:border-emerald-700 dark:bg-gray-800 dark:text-emerald-300 dark:focus:ring-emerald-700"
+                  aria-label="Jump to page"
+                />
+              </div>
             </div>
 
             <button
