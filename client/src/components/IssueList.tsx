@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useRef, memo } from 'react'
+import React, { useEffect, useState, useMemo, useRef } from 'react'
 import { useFetchIssues } from '../hooks/useFetchIssues'
 import DifficultyBadge from './DifficultyBadge'
 import { detectDifficulty } from '../utils/difficulty'
@@ -409,30 +409,34 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
 
                     {issue.labels && issue.labels.length > 0 && (
                       <div className="mt-4 flex flex-wrap gap-1">
-                        {issue.labels.slice(0, 3).map((l, i: number) => {
-                          const labelLower = l.name.toLowerCase()
-                          const icon = getLabelIcon(l.name || '')
-                          const dotColors: Record<string, string> = {
-                            'good first issue': 'bg-emerald-400',
-                            'help wanted': 'bg-sky-400',
-                            'enhancement': 'bg-violet-400',
-                            'bug': 'bg-rose-400',
-                            'feature': 'bg-indigo-400',
-                            'documentation': 'bg-amber-400'
-                          }
-                          const dot = dotColors[labelLower] || 'bg-slate-400'
+                        {issue.labels
+                          .slice(0, 3)
+                          .filter((l) => l.name)
+                          .map((l, i: number) => {
+                            const labelName = l.name!
+                            const labelLower = labelName.toLowerCase()
+                            const icon = getLabelIcon(labelName)
+                            const dotColors: Record<string, string> = {
+                              'good first issue': 'bg-emerald-400',
+                              'help wanted': 'bg-sky-400',
+                              'enhancement': 'bg-violet-400',
+                              'bug': 'bg-rose-400',
+                              'feature': 'bg-indigo-400',
+                              'documentation': 'bg-amber-400'
+                            }
+                            const dot = dotColors[labelLower] || 'bg-slate-400'
 
-                          return (
-                            <span
-                              key={`${issue.id}-label-${i}`}
-                              className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600 dark:border-gray-700 dark:bg-gray-800 dark:text-slate-300"
-                            >
-                              {icon && <span className="flex-shrink-0 text-slate-400">{icon}</span>}
-                              <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
-                              {l.name}
-                            </span>
-                          )
-                        })}
+                            return (
+                              <span
+                                key={`${issue.id}-label-${i}`}
+                                className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600 dark:border-gray-700 dark:bg-gray-800 dark:text-slate-300"
+                              >
+                                {icon && <span className="flex-shrink-0 text-slate-400">{icon}</span>}
+                                <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
+                                {labelName}
+                              </span>
+                            )
+                          })}
                         {issue.labels.length > 3 && (
                           <span className="inline-flex items-center rounded-full border border-slate-200 bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-500 dark:border-gray-700 dark:bg-gray-700/60 dark:text-slate-300">
                             +{issue.labels.length - 3}
