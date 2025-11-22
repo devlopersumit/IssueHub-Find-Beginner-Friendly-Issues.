@@ -5,6 +5,7 @@ type CacheEntry<T> = {
 }
 
 const CACHE_DURATION = 5 * 60 * 1000
+const DAILY_CACHE_DURATION = 24 * 60 * 60 * 1000
 const cache = new Map<string, CacheEntry<unknown>>()
 
 export function getCached<T>(key: string): T | null {
@@ -25,6 +26,18 @@ export function setCached<T>(key: string, data: T, duration: number = CACHE_DURA
     timestamp: Date.now(),
     expiresAt: Date.now() + duration,
   })
+}
+
+export function setDailyCached<T>(key: string, data: T): void {
+  const today = new Date().toISOString().split('T')[0]
+  const dailyKey = `${key}_${today}`
+  setCached(dailyKey, data, DAILY_CACHE_DURATION)
+}
+
+export function getDailyCached<T>(key: string): T | null {
+  const today = new Date().toISOString().split('T')[0]
+  const dailyKey = `${key}_${today}`
+  return getCached<T>(dailyKey)
 }
 
 export function clearCache(): void {
