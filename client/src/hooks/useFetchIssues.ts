@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useMemo } from 'react'
-import { getCached, setCached } from '../utils/requestCache'
+import { getDailyCached, setDailyCached } from '../utils/requestCache'
 
 type GithubIssueItem = {
   id: number
@@ -10,6 +10,7 @@ type GithubIssueItem = {
   repository_url: string
   labels: Array<{ name?: string; color?: string }>
   created_at: string
+  updated_at?: string
   comments?: number
 }
 
@@ -50,14 +51,14 @@ export function useFetchIssues(query: string, page: number = 1, perPage: number 
           return
         }
 
-        const cached = getCached<GithubSearchResponse>(cacheKey)
+        const cached = getDailyCached<GithubSearchResponse>(cacheKey)
         if (cached) {
           setData(cached)
           setIsLoading(false)
           return
         }
 
-        const url = `https://api.github.com/search/issues?q=${encodeURIComponent(query)}&page=${page}&per_page=${perPage}`
+        const url = `https://api.github.com/search/issues?q=${encodeURIComponent(query)}&sort=updated&order=desc&page=${page}&per_page=${perPage}`
 
         const response = await fetch(url, {
           method: 'GET',
@@ -92,7 +93,7 @@ export function useFetchIssues(query: string, page: number = 1, perPage: number 
         }
 
         const json: GithubSearchResponse = await response.json()
-        setCached(cacheKey, json)
+        setDailyCached(cacheKey, json)
         setData(json)
       } catch (err: unknown) {
         if ((err as any)?.name === 'AbortError') return
