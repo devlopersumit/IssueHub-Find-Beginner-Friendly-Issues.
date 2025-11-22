@@ -1,52 +1,65 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
-type Theme = 'light' | 'dark'
+type Theme = 'light' | 'dark' | 'auto'
 
 interface ThemeContextType {
   theme: Theme
+  effectiveTheme: 'light' | 'dark'
   toggleTheme: () => void
+  setTheme: (theme: Theme) => void
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
 const getInitialTheme = (): Theme => {
-  if (typeof window === 'undefined') return 'light'
+  if (typeof window === 'undefined') return 'auto'
   
   try {
     const saved = localStorage.getItem('theme')
-    if (saved === 'dark' || saved === 'light') {
-      const root = document.documentElement
-      if (saved === 'dark') {
-        root.classList.add('dark')
-      } else {
-        root.classList.remove('dark')
-      }
+    if (saved === 'dark' || saved === 'light' || saved === 'auto') {
       return saved as Theme
     }
   } catch (e) {
     console.error('Error reading theme from localStorage:', e)
   }
   
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-  if (prefersDark) {
-    document.documentElement.classList.add('dark')
-    return 'dark'
+  return 'auto'
+}
+
+const getEffectiveTheme = (theme: Theme): 'light' | 'dark' => {
+  if (theme === 'auto') {
+    if (typeof window !== 'undefined') {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+    return 'light'
+  }
+  return theme
+}
+
+const applyTheme = (effectiveTheme: 'light' | 'dark') => {
+  if (typeof window === 'undefined') return
+  
+  const root = document.documentElement
+  
+  if (effectiveTheme === 'dark') {
+    root.classList.add('dark')
+    root.setAttribute('data-theme', 'dark')
+  } else {
+    root.classList.remove('dark')
+    root.setAttribute('data-theme', 'light')
   }
   
-  return 'light'
+  root.setAttribute('aria-label', `Theme: ${effectiveTheme}`)
 }
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>(getInitialTheme)
+  const [theme, setThemeState] = useState<Theme>(getInitialTheme)
+  const [effectiveTheme, setEffectiveTheme] = useState<'light' | 'dark'>(() => getEffectiveTheme(getInitialTheme()))
 
   useEffect(() => {
-    const root = document.documentElement
-    
-    if (theme === 'dark') {
-      root.classList.add('dark')
-    } else {
-      root.classList.remove('dark')
-    }
+    const newEffectiveTheme = getEffectiveTheme(theme)
+    setEffectiveTheme(newEffectiveTheme)
+    applyTheme(newEffectiveTheme)
     
     try {
       localStorage.setItem('theme', theme)
@@ -55,30 +68,38 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   }, [theme])
 
+  useEffect(() => {
+    if (theme === 'auto' && typeof window !== 'undefined') {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+      
+      const handleChange = (e: MediaQueryListEvent) => {
+        const newEffectiveTheme = e.matches ? 'dark' : 'light'
+        setEffectiveTheme(newEffectiveTheme)
+        applyTheme(newEffectiveTheme)
+      }
+      
+      mediaQuery.addEventListener('change', handleChange)
+      return () => mediaQuery.removeEventListener('change', handleChange)
+    }
+  }, [theme])
+
+  const setTheme = React.useCallback((newTheme: Theme) => {
+    setThemeState(newTheme)
+  }, [])
+
   const toggleTheme = React.useCallback(() => {
-    setTheme((prevTheme) => {
-      const newTheme = prevTheme === 'light' ? 'dark' : 'light'
-      const root = document.documentElement
-      
-      if (newTheme === 'dark') {
-        root.classList.add('dark')
-        root.setAttribute('data-theme', 'dark')
-      } else {
-        root.classList.remove('dark')
-        root.setAttribute('data-theme', 'light')
-      }
-      
-      try {
-        localStorage.setItem('theme', newTheme)
-      } catch (e) {
-        console.error('Error saving theme:', e)
-      }
-      
-      return newTheme
+    setThemeState((prevTheme) => {
+      if (prevTheme === 'light') return 'dark'
+      if (prevTheme === 'dark') return 'auto'
+      return 'light'
     })
   }, [])
 
-  return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>
+  return (
+    <ThemeContext.Provider value={{ theme, effectiveTheme, toggleTheme, setTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  )
 }
 
 export const useTheme = () => {
