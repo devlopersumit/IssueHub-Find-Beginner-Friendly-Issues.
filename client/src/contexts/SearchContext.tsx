@@ -40,6 +40,7 @@ export const SearchProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     setSearchTerm(trimmedTerm)
     setSubmittedSearch(trimmedTerm)
     setIsDebouncing(false)
+    // Search history is handled in Header component
   }
 
   const clearSearch = () => {
