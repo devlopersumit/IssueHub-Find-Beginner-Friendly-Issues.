@@ -3,8 +3,30 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --bg-primary: #f8fafc;
+    --bg-secondary: #ffffff;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --border-color: #e2e8f0;
+    --accent-color: #10b981;
+  }
+
+  html.dark {
+    --bg-primary: #0a0e1a;
+    --bg-secondary: #111827;
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --border-color: #1e293b;
+    --accent-color: #34d399;
+    color-scheme: dark;
+  }
+
   body {
-    @apply font-sans antialiased bg-slate-50 text-slate-800 dark:bg-gray-950 dark:text-slate-200;
+    @apply font-sans antialiased;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 300ms ease, color 300ms ease;
   }
 
   h1,
@@ -13,27 +35,33 @@
   h4,
   h5,
   h6 {
-    @apply font-semibold text-slate-900 dark:text-slate-100 tracking-tight;
+    @apply font-semibold tracking-tight;
+    color: var(--text-primary);
   }
 
   p,
   span,
   li {
-    @apply text-slate-600 dark:text-slate-300;
+    color: var(--text-secondary);
+  }
+
+  a {
+    @apply focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900;
+  }
+
+  button {
+    @apply focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900;
+  }
+
+  input,
+  textarea,
+  select {
+    @apply focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900;
   }
 }
 
-/* Ensure dark mode works */
-html.dark {
-  color-scheme: dark;
-}
-
-/* Smooth transitions for theme changes - apply to elements that change colors */
+/* Smooth transitions for theme changes */
 html {
-  transition: background-color 300ms ease, color 300ms ease;
-}
-
-body {
   transition: background-color 300ms ease, color 300ms ease;
 }
 
@@ -42,23 +70,89 @@ body {
   transition: background-color 300ms ease, border-color 300ms ease, color 300ms ease;
 }
 
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --text-primary: #000000;
+    --text-secondary: #1a1a1a;
+    --border-color: #000000;
+  }
+
+  html.dark {
+    --text-primary: #ffffff;
+    --text-secondary: #e0e0e0;
+    --border-color: #ffffff;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 @layer utilities {
   .custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
+    width: 8px;
+    height: 8px;
   }
   
   .custom-scrollbar::-webkit-scrollbar-track {
     background: #f1f1f1;
     border-radius: 10px;
   }
+
+  html.dark .custom-scrollbar::-webkit-scrollbar-track {
+    background: #1e293b;
+  }
   
   .custom-scrollbar::-webkit-scrollbar-thumb {
     background: #cbd5e1;
     border-radius: 10px;
   }
+
+  html.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #475569;
+  }
   
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
+  }
+
+  html.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+  }
+
+  .focus-visible-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  .sr-only-focusable:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: inherit;
+    margin: inherit;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
   }
 }
 
