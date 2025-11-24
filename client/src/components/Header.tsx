@@ -121,7 +121,7 @@ const Header: React.FC<HeaderProps> = ({ title = 'IssueFinder', searchTerm, onSe
           {/* Search bar - always visible, responsive width */}
           <div className="relative flex-1 min-w-0 sm:max-w-md">
               <form
-                className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+                className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 shadow-sm dark:border-gray-700 dark:bg-gray-800 focus-within:ring-0 focus-within:outline-none"
                 onSubmit={(e) => {
                   e.preventDefault()
                   handleSearchSubmit()
@@ -140,7 +140,7 @@ const Header: React.FC<HeaderProps> = ({ title = 'IssueFinder', searchTerm, onSe
                 }}
                 onFocus={() => setShowSuggestions(true)}
                 placeholder="Search issues..."
-                className="w-full border-none bg-transparent text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none dark:text-slate-200"
+                className="w-full border-none bg-transparent text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 dark:text-slate-200"
                 aria-label="Search issues"
               />
                 {isDebouncing && (
