@@ -692,7 +692,7 @@ const FiltersPanel: React.FC<FiltersPanelProps> = ({
             <button
               type="button"
               onClick={handleClearFilters}
-              className="w-full rounded-lg border-2 border-slate-300 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 transition hover:border-red-400 hover:bg-red-50 hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-red-200 dark:border-gray-700 dark:bg-gray-800 dark:text-slate-200 dark:hover:border-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400"
+              className="w-full rounded-lg border-2 border-slate-300 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 transition hover:border-red-400 hover:bg-red-50 hover:text-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-200 dark:border-gray-700 dark:bg-gray-800 dark:text-slate-200 dark:hover:border-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400"
             >
               <span className="flex items-center justify-center gap-2">
                 <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

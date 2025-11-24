@@ -131,7 +131,7 @@ const HomePage: React.FC = () => {
             </div>
             <Link
               to="/repositories"
-              className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:bg-slate-100 dark:text-gray-900 dark:hover:bg-slate-200"
+              className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-200 dark:bg-slate-100 dark:text-gray-900 dark:hover:bg-slate-200"
             >
               Browse repositories
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

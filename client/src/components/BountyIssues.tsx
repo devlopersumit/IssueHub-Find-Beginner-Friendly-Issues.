@@ -1148,7 +1148,7 @@ const BountyIssues: React.FC<BountyIssuesProps> = ({ className = '' }) => {
                     setPage((p) => Math.max(1, p - 1))
                     window.scrollTo({ top: 0, behavior: 'smooth' })
                   }}
-                  className="inline-flex items-center gap-2 rounded-xl border border-amber-200 bg-white px-4 py-2 text-sm font-semibold text-amber-600 shadow-sm transition hover:border-amber-300 hover:text-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-200 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-400 dark:border-amber-900/40 dark:bg-gray-800 dark:text-amber-300 dark:hover:border-amber-700 dark:hover:text-amber-200"
+                  className="inline-flex items-center gap-2 rounded-xl border border-amber-200 bg-white px-4 py-2 text-sm font-semibold text-amber-600 shadow-sm transition hover:border-amber-300 hover:text-amber-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-200 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-400 dark:border-amber-900/40 dark:bg-gray-800 dark:text-amber-300 dark:hover:border-amber-700 dark:hover:text-amber-200"
                   disabled={!hasPrevPage || isLoading}
                 >
                   <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1229,7 +1229,7 @@ const BountyIssues: React.FC<BountyIssuesProps> = ({ className = '' }) => {
                           input.value = page.toString()
                         }
                       }}
-                      className="w-16 rounded-lg border border-amber-200 bg-white px-2 py-1 text-center text-xs font-semibold text-amber-700 shadow-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200 dark:border-amber-700 dark:bg-gray-800 dark:text-amber-300 dark:focus:ring-amber-700"
+                      className="w-16 rounded-lg border border-amber-200 bg-white px-2 py-1 text-center text-xs font-semibold text-amber-700 shadow-sm focus:border-amber-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-200 dark:border-amber-700 dark:bg-gray-800 dark:text-amber-300 dark:focus-visible:ring-amber-700"
                       aria-label="Jump to page"
                     />
                   </div>
@@ -1241,7 +1241,7 @@ const BountyIssues: React.FC<BountyIssuesProps> = ({ className = '' }) => {
                     setPage((p) => p + 1)
                     window.scrollTo({ top: 0, behavior: 'smooth' })
                   }}
-                  className="inline-flex items-center gap-2 rounded-xl border border-amber-200 bg-white px-4 py-2 text-sm font-semibold text-amber-600 shadow-sm transition hover:border-amber-300 hover:text-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-200 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-400 dark:border-amber-900/40 dark:bg-gray-800 dark:text-amber-300 dark:hover:border-amber-700 dark:hover:text-amber-200"
+                  className="inline-flex items-center gap-2 rounded-xl border border-amber-200 bg-white px-4 py-2 text-sm font-semibold text-amber-600 shadow-sm transition hover:border-amber-300 hover:text-amber-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-200 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-400 dark:border-amber-900/40 dark:bg-gray-800 dark:text-amber-300 dark:hover:border-amber-700 dark:hover:text-amber-200"
                   disabled={!hasNextPage || isLoading}
                 >
                   Next

@@ -507,7 +507,7 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
             <button
               type="button"
               onClick={() => setPage((p) => Math.max(1, p - 1))}
-              className="inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-white px-4 py-2 text-sm font-semibold text-emerald-600 shadow-sm transition hover:border-emerald-300 hover:text-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-200 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-400 dark:border-emerald-900/40 dark:bg-gray-800 dark:text-emerald-300 dark:hover:border-emerald-700 dark:hover:text-emerald-200"
+              className="inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-white px-4 py-2 text-sm font-semibold text-emerald-600 shadow-sm transition hover:border-emerald-300 hover:text-emerald-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-200 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-400 dark:border-emerald-900/40 dark:bg-gray-800 dark:text-emerald-300 dark:hover:border-emerald-700 dark:hover:text-emerald-200"
               disabled={!hasPrevPage || isLoading}
               aria-label="Go to previous page"
             >
@@ -581,7 +581,7 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
                       input.value = page.toString()
                     }
                   }}
-                  className="w-16 rounded-lg border border-emerald-200 bg-white px-2 py-1 text-center text-xs font-semibold text-emerald-700 shadow-sm focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200 dark:border-emerald-700 dark:bg-gray-800 dark:text-emerald-300 dark:focus:ring-emerald-700"
+                  className="w-16 rounded-lg border border-emerald-200 bg-white px-2 py-1 text-center text-xs font-semibold text-emerald-700 shadow-sm focus:border-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-200 dark:border-emerald-700 dark:bg-gray-800 dark:text-emerald-300 dark:focus:ring-emerald-700"
                   aria-label="Jump to page"
                 />
               </div>
@@ -590,7 +590,7 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
             <button
               type="button"
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              className="inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-white px-4 py-2 text-sm font-semibold text-emerald-600 shadow-sm transition hover:border-emerald-300 hover:text-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-200 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-400 dark:border-emerald-900/40 dark:bg-gray-800 dark:text-emerald-300 dark:hover:border-emerald-700 dark:hover:text-emerald-200"
+              className="inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-white px-4 py-2 text-sm font-semibold text-emerald-600 shadow-sm transition hover:border-emerald-300 hover:text-emerald-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-200 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-400 dark:border-emerald-900/40 dark:bg-gray-800 dark:text-emerald-300 dark:hover:border-emerald-700 dark:hover:text-emerald-200"
               disabled={!hasNextPage || isLoading}
               aria-label="Go to next page"
             >
