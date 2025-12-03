@@ -36,6 +36,9 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
   const [repoLanguages, setRepoLanguages] = useState<Record<string, string[]>>({})
   const languagesFetchedRef = useRef<Set<string>>(new Set())
   const { data, isLoading, error } = useFetchIssues(query, page, perPage)
+  
+  // Filter out rate limit errors - we handle them silently with cached data
+  const displayError = error && !error.message.toLowerCase().includes('rate limit') ? error : null
   const { saveIssue, removeIssue, isSaved } = useSavedIssues()
 
   useEffect(() => {
@@ -268,9 +271,9 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
                 </svg>
                 Refreshing opportunities…
               </>
-            ) : error ? (
+            ) : displayError ? (
               <span className="text-red-600 dark:text-red-400">
-                {error.message}
+                {displayError.message}
               </span>
             ) : (
               <>
@@ -283,7 +286,7 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
           </div>
         </div>
 
-        {displayItems.length === 0 && !isLoading && !error && (
+        {displayItems.length === 0 && !isLoading && !displayError && (
           <div className="mt-10 rounded-2xl border border-dashed border-slate-300 bg-slate-50/60 px-6 py-12 text-center dark:border-gray-700 dark:bg-gray-800/40">
             <svg className="mx-auto h-12 w-12 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -311,13 +314,13 @@ const IssueList: React.FC<IssueListProps> = ({ className = '', query, naturalLan
           </div>
         )}
 
-        {displayItems.length === 0 && !isLoading && error && (
+        {displayItems.length === 0 && !isLoading && displayError && (
           <div className="mt-10 rounded-2xl border border-red-200 bg-red-50/60 px-6 py-12 text-center dark:border-red-800/50 dark:bg-red-900/20">
             <svg className="mx-auto h-12 w-12 text-red-400 dark:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <h3 className="mt-3 text-lg font-semibold text-red-900 dark:text-red-100">Unable to load issues</h3>
-            <p className="mt-2 text-sm text-red-700 dark:text-red-300">{error.message}</p>
+            <p className="mt-2 text-sm text-red-700 dark:text-red-300">{displayError.message}</p>
             <div className="mt-4 space-y-2">
               <p className="text-xs font-semibold text-red-800 dark:text-red-200">What you can do:</p>
               <ul className="text-xs text-red-700 dark:text-red-300 space-y-1">
